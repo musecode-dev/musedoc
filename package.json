@@ -1,0 +1,80 @@
+{
+  "name": "musedoc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "musedoc": "bin/musedoc.js"
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "lint": "eslint --fix --ext .ts,.tsx,.js,.jsx --quiet ./",
+    "test:unit": "vitest run",
+    "prepare:e2e": "tsx scripts/prepare-e2e.ts",
+    "test:e2e": "playwright test"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "npm run lint"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "@loadable/component": "^5.16.2",
+    "@playwright/test": "^1.40.1",
+    "@types/fs-extra": "^11.0.4",
+    "@types/hast": "^3.0.3",
+    "@types/node": "^20.10.4",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.17",
+    "@types/unist": "^3.0.2",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "@vitest/ui": "^1.0.4",
+    "commitlint": "^18.4.3",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "execa": "^8.0.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.1",
+    "rollup": "^4.9.0",
+    "tsup": "^8.0.1",
+    "tsx": "^4.6.2",
+    "typescript": "^5.3.3",
+    "unist-util-visit": "^5.0.0",
+    "vitest": "^1.0.4"
+  },
+  "dependencies": {
+    "@mdx-js/rollup": "^3.0.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "cac": "^6.7.14",
+    "fast-glob": "^3.3.2",
+    "fs-extra": "^11.2.0",
+    "hast-util-from-html": "^2.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.21.0",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-highlight": "^7.0.0",
+    "rehype-slug": "^6.0.0",
+    "rehype-stringify": "^10.0.0",
+    "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.0",
+    "remark-mdx-frontmatter": "^4.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.0.0",
+    "shiki": "^0.14.7",
+    "unified": "^11.0.4",
+    "vite": "^5.0.8"
+  }
+}
