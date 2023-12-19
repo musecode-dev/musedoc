@@ -472,13 +472,55 @@ var rehypePluginShiki = ({ highlighter }) => {
   };
 };
 
+// src/node/plugin-mdx/remarkPlugins/toc.ts
+var _githubslugger = require('github-slugger');
+var _acorn = require('acorn');
+var remarkPluginToc = () => {
+  return (tree) => {
+    const toc = [];
+    visit(tree, "heading", (node) => {
+      if (!node.depth || !node.children) {
+        return;
+      }
+      if (node.depth > 1 && node.depth < 5) {
+        const originText = node.children.map((child) => {
+          switch (child.type) {
+            case "link":
+              return _optionalChain([child, 'access', _21 => _21.children, 'optionalAccess', _22 => _22.map, 'call', _23 => _23((c) => c.value), 'access', _24 => _24.join, 'call', _25 => _25("")]);
+            default:
+              return child.value;
+          }
+        }).join("");
+        const id = _githubslugger.slug.call(void 0, originText);
+        toc.push({
+          id,
+          text: originText,
+          depth: node.depth
+        });
+      }
+    });
+    const insertCode = `export const toc = ${JSON.stringify(toc, null, 2)}`;
+    tree.children.push({
+      type: "mdxjsEsm",
+      value: insertCode,
+      data: {
+        estree: _acorn.parse.call(void 0, insertCode, {
+          ecmaVersion: 2020,
+          sourceType: "module"
+        })
+      }
+    });
+  };
+};
+
 // src/node/plugin-mdx/pluginMdxRollup.ts
 async function pluginMdxRollup() {
   return _rollup2.default.call(void 0, {
     remarkPlugins: [
       _remarkgfm2.default,
       _remarkfrontmatter2.default,
-      _remarkmdxfrontmatter2.default
+      _remarkmdxfrontmatter2.default,
+      remarkPluginToc
     ],
     rehypePlugins: [
       _rehypeslug2.default,
@@ -607,7 +649,7 @@ async function renderPage(render, root, clientBundle) {
 
       <body>
         <div id="root">${appHtml}</div>
-        <script type="module" src="./${_optionalChain([clientChunk, 'optionalAccess', _21 => _21.fileName])}"></script>
+        <script type="module" src="./${_optionalChain([clientChunk, 'optionalAccess', _26 => _26.fileName])}"></script>
       </body>
 
     </html>

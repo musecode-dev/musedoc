@@ -8,13 +8,15 @@ import shiki from 'shiki';
 // import rehypeHighlight from 'rehype-highlight';
 import { rehypePluginPreWrapper } from './rehypePlugins/preWrapper';
 import { rehypePluginShiki } from './rehypePlugins/shiki';
+import { remarkPluginToc } from './remarkPlugins/toc';
 
 export async function pluginMdxRollup() {
   return pluginMdx({
     remarkPlugins: [
       remarkPluginGFM,
       remarkPluginFrontmatter,
-      remarkPluginMDXFrontMatter
+      remarkPluginMDXFrontMatter,
+      remarkPluginToc
     ],
     rehypePlugins: [
       rehypePluginSlug,
