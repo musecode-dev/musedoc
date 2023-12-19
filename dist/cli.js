@@ -212,6 +212,7 @@ var _rehypeautolinkheadings = require('rehype-autolink-headings'); var _rehypeau
 var _rehypeslug = require('rehype-slug'); var _rehypeslug2 = _interopRequireDefault(_rehypeslug);
 var _remarkfrontmatter = require('remark-frontmatter'); var _remarkfrontmatter2 = _interopRequireDefault(_remarkfrontmatter);
 var _remarkmdxfrontmatter = require('remark-mdx-frontmatter'); var _remarkmdxfrontmatter2 = _interopRequireDefault(_remarkmdxfrontmatter);
+var _shiki = require('shiki'); var _shiki2 = _interopRequireDefault(_shiki);
 
 // node_modules/.pnpm/unist-util-is@6.0.0/node_modules/unist-util-is/lib/index.js
 var convert = (
@@ -417,15 +418,17 @@ var rehypePluginPreWrapper = () => {
     visit(tree, "element", (node) => {
       if (node.tagName === "pre" && _optionalChain([node, 'access', _ => _.children, 'access', _2 => _2[0], 'optionalAccess', _3 => _3.type]) === "element" && _optionalChain([node, 'access', _4 => _4.children, 'access', _5 => _5[0], 'optionalAccess', _6 => _6.tagName]) === "code") {
         const codeNode = node.children[0];
-        const nodeClassName = _optionalChain([codeNode, 'access', _7 => _7.properties, 'optionalAccess', _8 => _8.className, 'optionalAccess', _9 => _9.toString, 'call', _10 => _10()]) || "";
-        const lang = nodeClassName.split("-")[1];
-        const cloneCode = {
+        const codeClassName = _optionalChain([codeNode, 'access', _7 => _7.properties, 'optionalAccess', _8 => _8.className, 'optionalAccess', _9 => _9.toString, 'call', _10 => _10()]) || "";
+        const lang = codeClassName.split("-")[1];
+        const clonedNode = {
           type: "element",
           tagName: "pre",
           children: node.children,
-          properties: node.properties
+          properties: {}
         };
         node.tagName = "div";
+        node.properties = node.properties || {};
+        node.properties.className = codeClassName;
         node.children = [
           {
             type: "element",
@@ -440,7 +443,7 @@ var rehypePluginPreWrapper = () => {
               }
             ]
           },
-          cloneCode
+          clonedNode
         ];
       }
       return SKIP;
@@ -448,8 +451,29 @@ var rehypePluginPreWrapper = () => {
   };
 };
 
+// src/node/plugin-mdx/rehypePlugins/shiki.ts
+var _hastutilfromhtml = require('hast-util-from-html');
+var rehypePluginShiki = ({ highlighter }) => {
+  return (tree) => {
+    visit(tree, "element", (node, index, parent) => {
+      if (node.tagName === "pre" && _optionalChain([node, 'access', _11 => _11.children, 'access', _12 => _12[0], 'optionalAccess', _13 => _13.type]) === "element" && _optionalChain([node, 'access', _14 => _14.children, 'access', _15 => _15[0], 'optionalAccess', _16 => _16.tagName]) === "code") {
+        const codeNode = node.children[0];
+        const codeContent = codeNode.children[0].value;
+        const codeClassName = _optionalChain([codeNode, 'access', _17 => _17.properties, 'optionalAccess', _18 => _18.className, 'optionalAccess', _19 => _19.toString, 'call', _20 => _20()]) || "";
+        const lang = codeClassName.split("-")[1];
+        if (!lang) {
+          return;
+        }
+        const highlightedCode = highlighter.codeToHtml(codeContent, { lang });
+        const fragmentAst = _hastutilfromhtml.fromHtml.call(void 0, highlightedCode, { fragment: true });
+        parent.children.splice(index, 1, ...fragmentAst.children);
+      }
+    });
+  };
+};
+
 // src/node/plugin-mdx/pluginMdxRollup.ts
-function pluginMdxRollup() {
+async function pluginMdxRollup() {
   return _rollup2.default.call(void 0, {
     remarkPlugins: [
       _remarkgfm2.default,
@@ -470,19 +494,25 @@ function pluginMdxRollup() {
           }
         }
       ],
-      rehypePluginPreWrapper
+      rehypePluginPreWrapper,
+      [
+        rehypePluginShiki,
+        {
+          highlighter: await _shiki2.default.getHighlighter({ theme: "nord" })
+        }
+      ]
       // [rehypeHighlight, { aliases: { javascript: 'custom-script' } }]
     ]
   });
 }
 
 // src/node/plugin-mdx/index.ts
-function createPluginMdx() {
-  return [pluginMdxRollup()];
+async function createPluginMdx() {
+  return [await pluginMdxRollup()];
 }
 
 // src/node/vitePlugins.ts
-function createVitePlugins(config, restartServer) {
+async function createVitePlugins(config, restartServer) {
   return [
     pluginIndexHtml(),
     _pluginreact2.default.call(void 0, ),
@@ -490,7 +520,7 @@ function createVitePlugins(config, restartServer) {
     pluginRoutes({
       root: config.root
     }),
-    createPluginMdx()
+    await createPluginMdx()
   ];
 }
 
@@ -509,7 +539,7 @@ async function createDevServer(root, restartServer) {
     //     root: config.root
     //   })
     // ]
-    plugins: createVitePlugins(config, restartServer)
+    plugins: await createVitePlugins(config, restartServer)
     // server: {
     //   fs: {
     //     allow: [PACKAGE_ROOT]
@@ -523,14 +553,14 @@ async function createDevServer(root, restartServer) {
 var _fsextra = require('fs-extra'); var _fsextra2 = _interopRequireDefault(_fsextra);
 
 async function bundle(root, config) {
-  const resolveViteConfig = (isServer) => ({
+  const resolveViteConfig = async (isServer) => ({
     mode: "production",
     root,
     // plugins: [
     //   // pluginReact(),
     //   pluginConfig(config)
     // ],
-    plugins: createVitePlugins(config),
+    plugins: await createVitePlugins(config),
     ssr: {
       // 注意加上这个配置，防止 cjs 产物中 require ESM 的产物，因为 react-router-dom 的产物为 ESM 格式
       noExternal: ["react-router-dom"]
@@ -550,9 +580,9 @@ async function bundle(root, config) {
   try {
     const [clientBundle, serverBundle] = await Promise.all([
       // client build
-      _vite.build.call(void 0, resolveViteConfig(false)),
+      _vite.build.call(void 0, await resolveViteConfig(false)),
       // server build
-      _vite.build.call(void 0, resolveViteConfig(true))
+      _vite.build.call(void 0, await resolveViteConfig(true))
     ]);
     return [clientBundle, serverBundle];
   } catch (e) {
@@ -577,7 +607,7 @@ async function renderPage(render, root, clientBundle) {
 
       <body>
         <div id="root">${appHtml}</div>
-        <script type="module" src="./${_optionalChain([clientChunk, 'optionalAccess', _11 => _11.fileName])}"></script>
+        <script type="module" src="./${_optionalChain([clientChunk, 'optionalAccess', _21 => _21.fileName])}"></script>
       </body>
 
     </html>

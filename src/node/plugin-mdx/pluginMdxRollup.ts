@@ -4,10 +4,12 @@ import rehypePluginAutolinkHeadings from 'rehype-autolink-headings';
 import rehypePluginSlug from 'rehype-slug';
 import remarkPluginFrontmatter from 'remark-frontmatter';
 import remarkPluginMDXFrontMatter from 'remark-mdx-frontmatter';
+import shiki from 'shiki';
 // import rehypeHighlight from 'rehype-highlight';
 import { rehypePluginPreWrapper } from './rehypePlugins/preWrapper';
+import { rehypePluginShiki } from './rehypePlugins/shiki';
 
-export function pluginMdxRollup() {
+export async function pluginMdxRollup() {
   return pluginMdx({
     remarkPlugins: [
       remarkPluginGFM,
@@ -28,7 +30,13 @@ export function pluginMdxRollup() {
           }
         }
       ],
-      rehypePluginPreWrapper
+      rehypePluginPreWrapper,
+      [
+        rehypePluginShiki,
+        {
+          highlighter: await shiki.getHighlighter({ theme: 'nord' })
+        }
+      ]
       // [rehypeHighlight, { aliases: { javascript: 'custom-script' } }]
     ]
   });

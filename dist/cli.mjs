@@ -213,6 +213,7 @@ import rehypePluginAutolinkHeadings from "rehype-autolink-headings";
 import rehypePluginSlug from "rehype-slug";
 import remarkPluginFrontmatter from "remark-frontmatter";
 import remarkPluginMDXFrontMatter from "remark-mdx-frontmatter";
+import shiki from "shiki";
 
 // node_modules/.pnpm/unist-util-is@6.0.0/node_modules/unist-util-is/lib/index.js
 var convert = (
@@ -418,15 +419,17 @@ var rehypePluginPreWrapper = () => {
     visit(tree, "element", (node) => {
       if (node.tagName === "pre" && node.children[0]?.type === "element" && node.children[0]?.tagName === "code") {
         const codeNode = node.children[0];
-        const nodeClassName = codeNode.properties?.className?.toString() || "";
-        const lang = nodeClassName.split("-")[1];
-        const cloneCode = {
+        const codeClassName = codeNode.properties?.className?.toString() || "";
+        const lang = codeClassName.split("-")[1];
+        const clonedNode = {
           type: "element",
           tagName: "pre",
           children: node.children,
-          properties: node.properties
+          properties: {}
         };
         node.tagName = "div";
+        node.properties = node.properties || {};
+        node.properties.className = codeClassName;
         node.children = [
           {
             type: "element",
@@ -441,7 +444,7 @@ var rehypePluginPreWrapper = () => {
               }
             ]
           },
-          cloneCode
+          clonedNode
         ];
       }
       return SKIP;
@@ -449,8 +452,29 @@ var rehypePluginPreWrapper = () => {
   };
 };
 
+// src/node/plugin-mdx/rehypePlugins/shiki.ts
+import { fromHtml } from "hast-util-from-html";
+var rehypePluginShiki = ({ highlighter }) => {
+  return (tree) => {
+    visit(tree, "element", (node, index, parent) => {
+      if (node.tagName === "pre" && node.children[0]?.type === "element" && node.children[0]?.tagName === "code") {
+        const codeNode = node.children[0];
+        const codeContent = codeNode.children[0].value;
+        const codeClassName = codeNode.properties?.className?.toString() || "";
+        const lang = codeClassName.split("-")[1];
+        if (!lang) {
+          return;
+        }
+        const highlightedCode = highlighter.codeToHtml(codeContent, { lang });
+        const fragmentAst = fromHtml(highlightedCode, { fragment: true });
+        parent.children.splice(index, 1, ...fragmentAst.children);
+      }
+    });
+  };
+};
+
 // src/node/plugin-mdx/pluginMdxRollup.ts
-function pluginMdxRollup() {
+async function pluginMdxRollup() {
   return pluginMdx({
     remarkPlugins: [
       remarkPluginGFM,
@@ -471,19 +495,25 @@ function pluginMdxRollup() {
           }
         }
       ],
-      rehypePluginPreWrapper
+      rehypePluginPreWrapper,
+      [
+        rehypePluginShiki,
+        {
+          highlighter: await shiki.getHighlighter({ theme: "nord" })
+        }
+      ]
       // [rehypeHighlight, { aliases: { javascript: 'custom-script' } }]
     ]
   });
 }
 
 // src/node/plugin-mdx/index.ts
-function createPluginMdx() {
-  return [pluginMdxRollup()];
+async function createPluginMdx() {
+  return [await pluginMdxRollup()];
 }
 
 // src/node/vitePlugins.ts
-function createVitePlugins(config, restartServer) {
+async function createVitePlugins(config, restartServer) {
   return [
     pluginIndexHtml(),
     pluginReact(),
@@ -491,7 +521,7 @@ function createVitePlugins(config, restartServer) {
     pluginRoutes({
       root: config.root
     }),
-    createPluginMdx()
+    await createPluginMdx()
   ];
 }
 
@@ -510,7 +540,7 @@ async function createDevServer(root, restartServer) {
     //     root: config.root
     //   })
     // ]
-    plugins: createVitePlugins(config, restartServer)
+    plugins: await createVitePlugins(config, restartServer)
     // server: {
     //   fs: {
     //     allow: [PACKAGE_ROOT]
@@ -524,14 +554,14 @@ import { join as join3 } from "path";
 import fs from "fs-extra";
 import { build as viteBuild } from "vite";
 async function bundle(root, config) {
-  const resolveViteConfig = (isServer) => ({
+  const resolveViteConfig = async (isServer) => ({
     mode: "production",
     root,
     // plugins: [
     //   // pluginReact(),
     //   pluginConfig(config)
     // ],
-    plugins: createVitePlugins(config),
+    plugins: await createVitePlugins(config),
     ssr: {
       // 注意加上这个配置，防止 cjs 产物中 require ESM 的产物，因为 react-router-dom 的产物为 ESM 格式
       noExternal: ["react-router-dom"]
@@ -551,9 +581,9 @@ async function bundle(root, config) {
   try {
     const [clientBundle, serverBundle] = await Promise.all([
       // client build
-      viteBuild(resolveViteConfig(false)),
+      viteBuild(await resolveViteConfig(false)),
       // server build
-      viteBuild(resolveViteConfig(true))
+      viteBuild(await resolveViteConfig(true))
     ]);
     return [clientBundle, serverBundle];
   } catch (e) {
