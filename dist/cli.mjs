@@ -164,13 +164,13 @@ var RouteService = class {
       { path: '/guide/b', element: React.createElement(Route1) }
     ];
    */
-  generateRoutesCode() {
+  generateRoutesCode(ssr = false) {
     return `
       import React from 'react';
-      import loadable from '@loadable/component';
+      ${!ssr && 'import loadable from "@loadable/component";'}
 
       ${this.#routeData.map((route, index) => {
-      return `const Route${index} = loadable(() => import('${route.absolutePath}'));`;
+      return ssr ? `import Route${index} from "${route.absolutePath}"` : `const Route${index} = loadable(() => import('${route.absolutePath}'));`;
     }).join("\n")}
       
       export const routes = [
@@ -201,7 +201,7 @@ function pluginRoutes(options) {
     },
     load(id) {
       if (id === "\0" + CONVENTIONAL_ROUTE_ID) {
-        return routeService.generateRoutesCode();
+        return routeService.generateRoutesCode(options.isSSR || false);
       }
     }
   };
@@ -587,13 +587,14 @@ async function createPluginMdx() {
 }
 
 // src/node/vitePlugins.ts
-async function createVitePlugins(config, restartServer) {
+async function createVitePlugins(config, restartServer, isSSR = false) {
   return [
     pluginIndexHtml(),
     pluginReact(),
     pluginConfig(config, restartServer),
     pluginRoutes({
-      root: config.root
+      root: config.root,
+      isSSR
     }),
     await createPluginMdx()
   ];
@@ -624,7 +625,7 @@ async function createDevServer(root, restartServer) {
 }
 
 // src/node/build.ts
-import { join as join3 } from "path";
+import { dirname, join as join3 } from "path";
 import fs from "fs-extra";
 import { build as viteBuild } from "vite";
 async function bundle(root, config) {
@@ -635,7 +636,7 @@ async function bundle(root, config) {
     //   // pluginReact(),
     //   pluginConfig(config)
     // ],
-    plugins: await createVitePlugins(config),
+    plugins: await createVitePlugins(config, void 0, isServer),
     ssr: {
       // 注意加上这个配置，防止 cjs 产物中 require ESM 的产物，因为 react-router-dom 的产物为 ESM 格式
       noExternal: ["react-router-dom"]
@@ -664,39 +665,45 @@ async function bundle(root, config) {
     console.log(e);
   }
 }
-async function renderPage(render, root, clientBundle) {
+async function renderPage(render, routes, root, clientBundle) {
   const clientChunk = clientBundle.output.find(
     (chunk) => chunk.type === "chunk" && chunk.isEntry
   );
   console.log("Rendering page in server side...");
-  const appHtml = render();
-  const html = `
-    <!DOCTYPE html>
-      <html lang="en">
-
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-      </head>
-
-      <body>
-        <div id="root">${appHtml}</div>
-        <script type="module" src="./${clientChunk?.fileName}"></script>
-      </body>
-
-    </html>
-  `.trim();
-  await fs.ensureDir(join3(root, "build"));
-  await fs.writeFile(join3(root, "build/index.html"), html);
+  await Promise.all(
+    routes.map(async (route) => {
+      const routePath = route.path;
+      const appHtml = render(routePath);
+      const html = `
+        <!DOCTYPE html>
+          <html lang="en">
+    
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+          </head>
+    
+          <body>
+            <div id="root">${appHtml}</div>
+            <script type="module" src="./${clientChunk?.fileName}"></script>
+          </body>
+    
+        </html>
+      `.trim();
+      const fileName = routePath.endsWith("/") ? `${routePath}index.html` : `${routePath}.html`;
+      await fs.ensureDir(join3(root, "build", dirname(fileName)));
+      await fs.writeFile(join3(root, "build", fileName), html);
+    })
+  );
   await fs.remove(join3(root, ".temp"));
 }
 async function build(root = process.cwd(), config) {
   const [clientBundle] = await bundle(root, config);
   const serverEntryPath = join3(root, ".temp", "ssr-entry.js");
-  const { render } = await import(serverEntryPath);
+  const { render, routes } = await import(serverEntryPath);
   try {
-    await renderPage(render, root, clientBundle);
+    await renderPage(render, routes, root, clientBundle);
   } catch (e) {
     console.log("Render page error.\n", e);
   }

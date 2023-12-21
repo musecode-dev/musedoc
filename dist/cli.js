@@ -163,13 +163,13 @@ var RouteService = class {
       { path: '/guide/b', element: React.createElement(Route1) }
     ];
    */
-  generateRoutesCode() {
+  generateRoutesCode(ssr = false) {
     return `
       import React from 'react';
-      import loadable from '@loadable/component';
+      ${!ssr && 'import loadable from "@loadable/component";'}
 
       ${this.#routeData.map((route, index) => {
-      return `const Route${index} = loadable(() => import('${route.absolutePath}'));`;
+      return ssr ? `import Route${index} from "${route.absolutePath}"` : `const Route${index} = loadable(() => import('${route.absolutePath}'));`;
     }).join("\n")}
       
       export const routes = [
@@ -200,7 +200,7 @@ function pluginRoutes(options) {
     },
     load(id) {
       if (id === "\0" + CONVENTIONAL_ROUTE_ID) {
-        return routeService.generateRoutesCode();
+        return routeService.generateRoutesCode(options.isSSR || false);
       }
     }
   };
@@ -586,13 +586,14 @@ async function createPluginMdx() {
 }
 
 // src/node/vitePlugins.ts
-async function createVitePlugins(config, restartServer) {
+async function createVitePlugins(config, restartServer, isSSR = false) {
   return [
     pluginIndexHtml(),
     _pluginreact2.default.call(void 0, ),
     pluginConfig(config, restartServer),
     pluginRoutes({
-      root: config.root
+      root: config.root,
+      isSSR
     }),
     await createPluginMdx()
   ];
@@ -634,7 +635,7 @@ async function bundle(root, config) {
     //   // pluginReact(),
     //   pluginConfig(config)
     // ],
-    plugins: await createVitePlugins(config),
+    plugins: await createVitePlugins(config, void 0, isServer),
     ssr: {
       // 注意加上这个配置，防止 cjs 产物中 require ESM 的产物，因为 react-router-dom 的产物为 ESM 格式
       noExternal: ["react-router-dom"]
@@ -663,39 +664,45 @@ async function bundle(root, config) {
     console.log(e);
   }
 }
-async function renderPage(render, root, clientBundle) {
+async function renderPage(render, routes, root, clientBundle) {
   const clientChunk = clientBundle.output.find(
     (chunk) => chunk.type === "chunk" && chunk.isEntry
   );
   console.log("Rendering page in server side...");
-  const appHtml = render();
-  const html = `
-    <!DOCTYPE html>
-      <html lang="en">
-
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-      </head>
-
-      <body>
-        <div id="root">${appHtml}</div>
-        <script type="module" src="./${_optionalChain([clientChunk, 'optionalAccess', _32 => _32.fileName])}"></script>
-      </body>
-
-    </html>
-  `.trim();
-  await _fsextra2.default.ensureDir(_path.join.call(void 0, root, "build"));
-  await _fsextra2.default.writeFile(_path.join.call(void 0, root, "build/index.html"), html);
+  await Promise.all(
+    routes.map(async (route) => {
+      const routePath = route.path;
+      const appHtml = render(routePath);
+      const html = `
+        <!DOCTYPE html>
+          <html lang="en">
+    
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+          </head>
+    
+          <body>
+            <div id="root">${appHtml}</div>
+            <script type="module" src="./${_optionalChain([clientChunk, 'optionalAccess', _32 => _32.fileName])}"></script>
+          </body>
+    
+        </html>
+      `.trim();
+      const fileName = routePath.endsWith("/") ? `${routePath}index.html` : `${routePath}.html`;
+      await _fsextra2.default.ensureDir(_path.join.call(void 0, root, "build", _path.dirname.call(void 0, fileName)));
+      await _fsextra2.default.writeFile(_path.join.call(void 0, root, "build", fileName), html);
+    })
+  );
   await _fsextra2.default.remove(_path.join.call(void 0, root, ".temp"));
 }
 async function build(root = process.cwd(), config) {
   const [clientBundle] = await bundle(root, config);
   const serverEntryPath = _path.join.call(void 0, root, ".temp", "ssr-entry.js");
-  const { render } = await Promise.resolve().then(() => _interopRequireWildcard(require(serverEntryPath)));
+  const { render, routes } = await Promise.resolve().then(() => _interopRequireWildcard(require(serverEntryPath)));
   try {
-    await renderPage(render, root, clientBundle);
+    await renderPage(render, routes, root, clientBundle);
   } catch (e) {
     console.log("Render page error.\n", e);
   }
