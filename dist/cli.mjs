@@ -33,6 +33,7 @@ var SERVER_ENTRY_PATH = join(
   "runtime",
   "ssr-entry.tsx"
 );
+var MD_REGEX = /\.mdx?$/;
 
 // src/node/plugin-musedoc/indexHtml.ts
 function pluginIndexHtml() {
@@ -549,9 +550,40 @@ async function pluginMdxRollup() {
   });
 }
 
+// src/node/plugin-mdx/pluginMdxHmr.ts
+import assert from "assert";
+function pluginMdxHMR() {
+  let viteReactPlugin;
+  return {
+    name: "vite-plugin-mdx-hmr",
+    apply: "serve",
+    configResolved(config) {
+      viteReactPlugin = config.plugins.find(
+        (plugin) => plugin.name === "vite:react-babel"
+      );
+    },
+    async transform(code, id, opts) {
+      if (MD_REGEX.test(id) && !!viteReactPlugin) {
+        assert(typeof viteReactPlugin.transform === "function");
+        const result = await viteReactPlugin.transform?.call(
+          this,
+          code,
+          id + ".jsx",
+          opts
+        );
+        const selfAcceptCode = "import.meta.hot.accept();";
+        if (typeof result === "object" && !result.code?.includes(selfAcceptCode)) {
+          result.code += selfAcceptCode;
+        }
+        return result;
+      }
+    }
+  };
+}
+
 // src/node/plugin-mdx/index.ts
 async function createPluginMdx() {
-  return [await pluginMdxRollup()];
+  return [await pluginMdxRollup(), pluginMdxHMR()];
 }
 
 // src/node/vitePlugins.ts

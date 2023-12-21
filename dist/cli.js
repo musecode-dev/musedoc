@@ -32,6 +32,7 @@ var SERVER_ENTRY_PATH = _path.join.call(void 0,
   "runtime",
   "ssr-entry.tsx"
 );
+var MD_REGEX = /\.mdx?$/;
 
 // src/node/plugin-musedoc/indexHtml.ts
 function pluginIndexHtml() {
@@ -548,9 +549,40 @@ async function pluginMdxRollup() {
   });
 }
 
+// src/node/plugin-mdx/pluginMdxHmr.ts
+var _assert = require('assert'); var _assert2 = _interopRequireDefault(_assert);
+function pluginMdxHMR() {
+  let viteReactPlugin;
+  return {
+    name: "vite-plugin-mdx-hmr",
+    apply: "serve",
+    configResolved(config) {
+      viteReactPlugin = config.plugins.find(
+        (plugin) => plugin.name === "vite:react-babel"
+      );
+    },
+    async transform(code, id, opts) {
+      if (MD_REGEX.test(id) && !!viteReactPlugin) {
+        _assert2.default.call(void 0, typeof viteReactPlugin.transform === "function");
+        const result = await _optionalChain([viteReactPlugin, 'access', _26 => _26.transform, 'optionalAccess', _27 => _27.call, 'call', _28 => _28(
+          this,
+          code,
+          id + ".jsx",
+          opts
+        )]);
+        const selfAcceptCode = "import.meta.hot.accept();";
+        if (typeof result === "object" && !_optionalChain([result, 'access', _29 => _29.code, 'optionalAccess', _30 => _30.includes, 'call', _31 => _31(selfAcceptCode)])) {
+          result.code += selfAcceptCode;
+        }
+        return result;
+      }
+    }
+  };
+}
+
 // src/node/plugin-mdx/index.ts
 async function createPluginMdx() {
-  return [await pluginMdxRollup()];
+  return [await pluginMdxRollup(), pluginMdxHMR()];
 }
 
 // src/node/vitePlugins.ts
@@ -649,7 +681,7 @@ async function renderPage(render, root, clientBundle) {
 
       <body>
         <div id="root">${appHtml}</div>
-        <script type="module" src="./${_optionalChain([clientChunk, 'optionalAccess', _26 => _26.fileName])}"></script>
+        <script type="module" src="./${_optionalChain([clientChunk, 'optionalAccess', _32 => _32.fileName])}"></script>
       </body>
 
     </html>
