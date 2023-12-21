@@ -11,6 +11,7 @@ var _vite = require('vite');
 
 // src/node/vitePlugins.ts
 var _pluginreact = require('@vitejs/plugin-react'); var _pluginreact2 = _interopRequireDefault(_pluginreact);
+var _vite3 = require('unocss/vite'); var _vite4 = _interopRequireDefault(_vite3);
 
 // src/node/plugin-musedoc/indexHtml.ts
 
@@ -186,8 +187,8 @@ var RouteService = class {
 
 // src/node/plugin-routes/index.ts
 var CONVENTIONAL_ROUTE_ID = "musedoc:routes";
-function pluginRoutes(options) {
-  const routeService = new RouteService(options.root);
+function pluginRoutes(options2) {
+  const routeService = new RouteService(options2.root);
   return {
     name: "musedoc:routes",
     async configResolved() {
@@ -200,7 +201,7 @@ function pluginRoutes(options) {
     },
     load(id) {
       if (id === "\0" + CONVENTIONAL_ROUTE_ID) {
-        return routeService.generateRoutesCode(options.isSSR || false);
+        return routeService.generateRoutesCode(options2.isSSR || false);
       }
     }
   };
@@ -585,9 +586,17 @@ async function createPluginMdx() {
   return [await pluginMdxRollup(), pluginMdxHMR()];
 }
 
+// src/node/unocssOptions.ts
+var _unocss = require('unocss');
+var options = {
+  presets: [_unocss.presetAttributify.call(void 0, ), _unocss.presetWind.call(void 0, ), _unocss.presetIcons.call(void 0, )]
+};
+var unocssOptions_default = options;
+
 // src/node/vitePlugins.ts
 async function createVitePlugins(config, restartServer, isSSR = false) {
   return [
+    _vite4.default.call(void 0, unocssOptions_default),
     pluginIndexHtml(),
     _pluginreact2.default.call(void 0, ),
     pluginConfig(config, restartServer),

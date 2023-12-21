@@ -1,9 +1,11 @@
 import pluginReact from '@vitejs/plugin-react';
+import pluginUnocss from 'unocss/vite';
 import { pluginIndexHtml } from './plugin-musedoc/indexHtml';
 import { pluginConfig } from './plugin-musedoc/config';
 import { pluginRoutes } from './plugin-routes';
 import { createPluginMdx } from './plugin-mdx';
 import { SiteConfig } from 'shared/types';
+import unocssOptions from './unocssOptions';
 
 export async function createVitePlugins(
   config: SiteConfig,
@@ -11,6 +13,7 @@ export async function createVitePlugins(
   isSSR = false
 ) {
   return [
+    pluginUnocss(unocssOptions),
     pluginIndexHtml(),
     pluginReact(),
     pluginConfig(config, restartServer),

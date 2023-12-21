@@ -12,6 +12,7 @@ import { createServer } from "vite";
 
 // src/node/vitePlugins.ts
 import pluginReact from "@vitejs/plugin-react";
+import pluginUnocss from "unocss/vite";
 
 // src/node/plugin-musedoc/indexHtml.ts
 import path from "path";
@@ -187,8 +188,8 @@ var RouteService = class {
 
 // src/node/plugin-routes/index.ts
 var CONVENTIONAL_ROUTE_ID = "musedoc:routes";
-function pluginRoutes(options) {
-  const routeService = new RouteService(options.root);
+function pluginRoutes(options2) {
+  const routeService = new RouteService(options2.root);
   return {
     name: "musedoc:routes",
     async configResolved() {
@@ -201,7 +202,7 @@ function pluginRoutes(options) {
     },
     load(id) {
       if (id === "\0" + CONVENTIONAL_ROUTE_ID) {
-        return routeService.generateRoutesCode(options.isSSR || false);
+        return routeService.generateRoutesCode(options2.isSSR || false);
       }
     }
   };
@@ -586,9 +587,17 @@ async function createPluginMdx() {
   return [await pluginMdxRollup(), pluginMdxHMR()];
 }
 
+// src/node/unocssOptions.ts
+import { presetAttributify, presetWind, presetIcons } from "unocss";
+var options = {
+  presets: [presetAttributify(), presetWind(), presetIcons()]
+};
+var unocssOptions_default = options;
+
 // src/node/vitePlugins.ts
 async function createVitePlugins(config, restartServer, isSSR = false) {
   return [
+    pluginUnocss(unocssOptions_default),
     pluginIndexHtml(),
     pluginReact(),
     pluginConfig(config, restartServer),
