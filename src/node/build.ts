@@ -7,7 +7,7 @@ import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from './constants';
 import { SiteConfig } from '../shared/types';
 // import { pluginConfig } from './plugin-musedoc/config';
 import { createVitePlugins } from './vitePlugins';
-import { RouteObject } from 'react-router-dom';
+import { Route } from 'node/plugin-routes';
 
 export async function bundle(root: string, config: SiteConfig) {
   const resolveViteConfig = async (
@@ -52,7 +52,7 @@ export async function bundle(root: string, config: SiteConfig) {
 
 export async function renderPage(
   render: (pagePath: string) => string,
-  routes: RouteObject[],
+  routes: Route[],
   root: string,
   clientBundle: RollupOutput
 ) {

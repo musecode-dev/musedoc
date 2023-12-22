@@ -5,7 +5,7 @@ declare module 'musedoc:site-data' {
 }
 
 declare module 'musedoc:routes' {
-  import { RouteObject } from 'react-router-dom';
-  const routes: RouteObject[];
+  import { Route } from 'node/plugin-routes';
+  const routes: Route[];
   export { routes };
 }

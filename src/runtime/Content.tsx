@@ -4,7 +4,7 @@ import { routes } from 'musedoc:routes';
 // import A from '../../docs/guide/a';
 // import B from '../../docs/b';
 
-// const routes: RouteObject[] = [
+// const routes: Route[] = [
 //   {
 //     path: '/guide',
 //     element: <Index />
