@@ -603,6 +603,17 @@ var options = {
       ([, w]) => ({
         [`border-${w}`]: "1px solid var(--musedoc-c-divider-light)"
       })
+    ],
+    [
+      "menu-item-before",
+      {
+        "margin-right": "12px",
+        "margin-left": "12px",
+        width: "1px",
+        height: "2px",
+        "background-color": "var(--musedoc-c-divider-light)",
+        content: '""'
+      }
     ]
   ]
 };
