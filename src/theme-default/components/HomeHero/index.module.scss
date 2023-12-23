@@ -1,0 +1,6 @@
+.clip {
+  background: var(--musedoc-home-hero-name-background);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: var(--musedoc-home-hero-name-color);
+}

@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { App, initPageData } from './App';
+import { App, initPageData } from './app';
 import { DataContext } from './hooks';
 
 async function renderInBrowser() {
