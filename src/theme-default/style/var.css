@@ -1,0 +1,356 @@
+/**
+ * Colors Base
+ *
+ * These are the pure base color presets. Most of the time, you should not be
+ * using these colors directly in the theme but rather use "Colors Theme"
+ * instead because those are "Theme (light or dark)" dependant.
+ * -------------------------------------------------------------------------- */
+
+ :root {
+  --musedoc-c-white: #ffffff;
+  --musedoc-c-white-soft: #f9f9f9;
+  --musedoc-c-white-mute: #f1f1f1;
+
+  --musedoc-c-black: #1a1a1a;
+  --musedoc-c-black-pure: #000000;
+  --musedoc-c-black-soft: #242424;
+  --musedoc-c-black-mute: #2f2f2f;
+
+  --musedoc-c-gray: #8e8e8e;
+  --musedoc-c-gray-light-1: #aeaeae;
+  --musedoc-c-gray-light-2: #c7c7c7;
+  --musedoc-c-gray-light-3: #d1d1d1;
+  --musedoc-c-gray-light-4: #e5e5e5;
+  --musedoc-c-gray-light-5: #f2f2f2;
+  --musedoc-c-gray-dark-1: #636363;
+  --musedoc-c-gray-dark-2: #484848;
+  --musedoc-c-gray-dark-3: #3a3a3a;
+  --musedoc-c-gray-dark-4: #282828;
+  --musedoc-c-gray-dark-5: #202020;
+
+  --musedoc-c-divider-light-1: rgba(60, 60, 60, 0.29);
+  --musedoc-c-divider-light-2: rgba(60, 60, 60, 0.12);
+  --musedoc-c-divider-dark-1: rgba(84, 84, 84, 0.65);
+  --musedoc-c-divider-dark-2: rgba(84, 84, 84, 0.48);
+
+  --musedoc-c-indigo: #213547;
+  --musedoc-c-indigo-soft: #476582;
+  --musedoc-c-indigo-light: #aac8e4;
+  --musedoc-c-indigo-lighter: #c9def1;
+  --musedoc-c-indigo-dark: #1d2f3f;
+  --musedoc-c-indigo-darker: #14212e;
+
+  --musedoc-c-text-light-1: var(--musedoc-c-indigo);
+  --musedoc-c-text-light-2: rgba(60, 60, 60, 0.7);
+  --musedoc-c-text-light-3: rgba(60, 60, 60, 0.33);
+  --musedoc-c-text-light-4: rgba(60, 60, 60, 0.18);
+
+  --musedoc-c-text-dark-1: rgba(255, 255, 255, 0.87);
+  --musedoc-c-text-dark-2: rgba(235, 235, 235, 0.6);
+  --musedoc-c-text-dark-3: rgba(235, 235, 235, 0.38);
+  --musedoc-c-text-dark-4: rgba(235, 235, 235, 0.18);
+
+  --musedoc-c-green: #21b8a3;
+  --musedoc-c-green-light: #41c6b0;
+  --musedoc-c-green-lighter: #41c6b0;
+  --musedoc-c-green-dark: #149684;
+  --musedoc-c-green-darker: #149684;
+  --musedoc-c-green-dimm: #062521;
+
+  --musedoc-c-green-dimm-1: rgba(66, 184, 131, 0.5);
+  --musedoc-c-green-dimm-2: rgba(66, 184, 131, 0.25);
+  --musedoc-c-green-dimm-3: rgba(66, 184, 131, 0.05);
+
+  --musedoc-c-blue: #646cff;
+  --musedoc-c-blue-light: #747bff;
+  --musedoc-c-blue-lighter: #9499ff;
+  --musedoc-c-blue-lightest: #bcc0ff;
+  --musedoc-c-blue-dark: #535bf2;
+  --musedoc-c-blue-darker: #454ce1;
+  --musedoc-c-blue-dimm: rgba(100, 108, 255, 0.08);
+
+  --musedoc-c-yellow: #ffc517;
+  --musedoc-c-yellow-light: #fcd253;
+  --musedoc-c-yellow-lighter: #fcfc7c;
+  --musedoc-c-yellow-darker: #ad850e;
+  --musedoc-c-yellow-dimm-1: rgba(255, 197, 23, 0.5);
+  --musedoc-c-yellow-dimm-2: rgba(255, 197, 23, 0.25);
+  --musedoc-c-yellow-dimm-3: rgba(255, 197, 23, 0.05);
+
+  --musedoc-c-red: #ed3c50;
+  --musedoc-c-red-light: #f54e82;
+  --musedoc-c-red-lighter: #fd1d7c;
+  --musedoc-c-red-darker: #ab2131;
+  --musedoc-c-red-dimm-1: rgba(237, 60, 80, 0.5);
+  --musedoc-c-red-dimm-2: rgba(237, 60, 80, 0.25);
+  --musedoc-c-red-dimm-3: rgba(237, 60, 80, 0.05);
+}
+
+/**
+ * Colors Theme
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --musedoc-c-bg: var(--musedoc-c-white);
+  --musedoc-c-bg-soft: var(--musedoc-c-white-soft);
+  --musedoc-c-bg-mute: var(--musedoc-c-white-mute);
+  --musedoc-c-bg-alt: var(--musedoc-c-white-soft);
+
+  --musedoc-c-divider: var(--musedoc-c-divider-light-1);
+  --musedoc-c-divider-light: var(--musedoc-c-divider-light-2);
+
+  --musedoc-c-text-1: var(--musedoc-c-text-light-1);
+  --musedoc-c-text-2: var(--musedoc-c-text-light-2);
+  --musedoc-c-text-3: var(--musedoc-c-text-light-3);
+  --musedoc-c-text-4: var(--musedoc-c-text-light-4);
+
+  --musedoc-c-text-code: var(--musedoc-c-indigo-soft);
+
+  --musedoc-c-brand: var(--musedoc-c-green);
+  --musedoc-c-brand-light: var(--musedoc-c-green-light);
+  --musedoc-c-brand-lighter: var(--musedoc-c-green-lighter);
+  --musedoc-c-brand-dark: var(--musedoc-c-green-dark);
+  --musedoc-c-brand-darker: var(--musedoc-c-green-darker);
+}
+
+.dark {
+  --musedoc-c-bg: var(--musedoc-c-black-soft);
+  --musedoc-c-bg-soft: var(--musedoc-c-black-mute);
+  --musedoc-c-bg-mute: var(--musedoc-c-gray-dark-3);
+  --musedoc-c-bg-alt: var(--musedoc-c-black);
+
+  --musedoc-c-divider: var(--musedoc-c-divider-dark-1);
+  --musedoc-c-divider-light: var(--musedoc-c-divider-dark-2);
+
+  --musedoc-c-divider-inverse: var(--musedoc-c-divider-light-1);
+  --musedoc-c-divider-inverse-light: var(--musedoc-c-divider-light-2);
+
+  --musedoc-c-text-1: var(--musedoc-c-text-dark-1);
+  --musedoc-c-text-2: var(--musedoc-c-text-dark-2);
+  --musedoc-c-text-3: var(--musedoc-c-text-dark-3);
+  --musedoc-c-text-4: var(--musedoc-c-text-dark-4);
+
+  --musedoc-c-text-inverse-1: var(--musedoc-c-text-light-1);
+  --musedoc-c-text-inverse-2: var(--musedoc-c-text-light-2);
+  --musedoc-c-text-inverse-3: var(--musedoc-c-text-light-3);
+  --musedoc-c-text-inverse-4: var(--musedoc-c-text-light-4);
+
+  --musedoc-c-text-code: var(--musedoc-c-indigo-lighter);
+}
+
+/**
+ * Typography
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --musedoc-font-family-base: 'Inter var experimental', 'Inter var',
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --musedoc-font-family-mono: Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/**
+ * Layouts
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --musedoc-layout-max-width: 1440px;
+}
+
+/**
+ * Component: Code
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --musedoc-code-line-height: 1.7;
+  --musedoc-code-font-size: 0.875em;
+
+  --musedoc-code-block-color: var(--musedoc-c-text-dark-1);
+  --musedoc-code-block-bg: #292d3e;
+
+  --musedoc-code-line-highlight-color: rgba(0, 0, 0, 0.5);
+  --musedoc-code-line-number-color: var(--musedoc-c-text-dark-3);
+
+  --musedoc-code-copy-code-hover-bg: rgba(255, 255, 255, 0.05);
+  --musedoc-code-copy-code-active-text: var(--musedoc-c-text-dark-2);
+}
+
+/**
+ * Icons
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --musedoc-icon-copy: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' height='20' width='20' stroke='rgba(128,128,128,1)' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2'/%3E%3C/svg%3E");
+  --musedoc-icon-copied: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' height='20' width='20' stroke='rgba(128,128,128,1)' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 9 2 2 4-4'/%3E%3C/svg%3E");
+  --musedoc-icon-tip: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M512 960C264.58 960 64 759.42 64 512S264.58 64 512 64s448 200.58 448 448-200.58 448-448 448z m0-832c-212.08 0-384 171.92-384 384s171.92 384 384 384 384-171.92 384-384-171.92-384-384-384z m0 112c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z m0 160c-17.67 0-32 14.33-32 32v320c0 17.67 14.33 32 32 32 17.67 0 32-14.33 32-32V432c0-17.67-14.33-32-32-32z' fill='%2321b8a3'/%3E%3C/svg%3E");
+}
+
+.dark {
+  --musedoc-code-block-bg: var(--musedoc-c-bg-alt);
+}
+
+/**
+ * Z-indexes
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --musedoc-z-index-local-nav: 10;
+  --musedoc-z-index-nav: 20;
+  --musedoc-z-index-layout-top: 30;
+  --musedoc-z-index-backdrop: 40;
+  --musedoc-z-index-sidebar: 50;
+  --musedoc-z-index-footer: 60;
+}
+
+/**
+ * Component: Button
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --musedoc-button-brand-border: var(--musedoc-c-brand-light);
+  --musedoc-button-brand-text: var(--musedoc-c-text-dark-1);
+  --musedoc-button-brand-bg: var(--musedoc-c-brand);
+  --musedoc-button-brand-hover-border: var(--musedoc-c-brand-light);
+  --musedoc-button-brand-hover-text: var(--musedoc-c-text-dark-1);
+  --musedoc-button-brand-hover-bg: var(--musedoc-c-brand-light);
+  --musedoc-button-brand-active-border: var(--musedoc-c-brand-light);
+  --musedoc-button-brand-active-text: var(--musedoc-c-text-dark-1);
+  --musedoc-button-brand-active-bg: var(--musedoc-button-brand-bg);
+
+  --musedoc-button-alt-border: var(--musedoc-c-gray-light-3);
+  --musedoc-button-alt-text: var(--musedoc-c-text-light-1);
+  --musedoc-button-alt-bg: var(--musedoc-c-gray-light-5);
+  --musedoc-button-alt-hover-border: var(--musedoc-c-gray-light-3);
+  --musedoc-button-alt-hover-text: var(--musedoc-c-text-light-1);
+  --musedoc-button-alt-hover-bg: var(--musedoc-c-gray-light-4);
+  --musedoc-button-alt-active-border: var(--musedoc-c-gray-light-3);
+  --musedoc-button-alt-active-text: var(--musedoc-c-text-light-1);
+  --musedoc-button-alt-active-bg: var(--musedoc-c-gray-light-3);
+
+  --musedoc-button-sponsor-border: var(--musedoc-c-gray-light-3);
+  --musedoc-button-sponsor-text: var(--musedoc-c-text-light-2);
+  --musedoc-button-sponsor-bg: transparent;
+  --musedoc-button-sponsor-hover-border: var(--musedoc-c-sponsor);
+  --musedoc-button-sponsor-hover-text: var(--musedoc-c-sponsor);
+  --musedoc-button-sponsor-hover-bg: transparent;
+  --musedoc-button-sponsor-active-border: var(--musedoc-c-sponsor);
+  --musedoc-button-sponsor-active-text: var(--musedoc-c-sponsor);
+  --musedoc-button-sponsor-active-bg: transparent;
+}
+
+.dark {
+  --musedoc-button-brand-border: var(--musedoc-c-brand-light);
+  --musedoc-button-brand-text: var(--musedoc-c-text-dark-1);
+  --musedoc-button-brand-bg: var(--musedoc-c-brand-dark);
+  --musedoc-button-brand-hover-border: var(--musedoc-c-brand-lighter);
+  --musedoc-button-brand-hover-text: var(--musedoc-c-text-dark-1);
+  --musedoc-button-brand-hover-bg: var(--musedoc-c-brand);
+  --musedoc-button-brand-active-border: var(--musedoc-c-brand-lighter);
+  --musedoc-button-brand-active-text: var(--musedoc-c-text-dark-1);
+  --musedoc-button-brand-active-bg: var(--musedoc-button-brand-bg);
+
+  --musedoc-button-alt-border: var(--musedoc-c-gray-dark-2);
+  --musedoc-button-alt-text: var(--musedoc-c-text-dark-1);
+  --musedoc-button-alt-bg: var(--musedoc-c-bg-mute);
+  --musedoc-button-alt-hover-border: var(--musedoc-c-gray-dark-2);
+  --musedoc-button-alt-hover-text: var(--musedoc-c-text-dark-1);
+  --musedoc-button-alt-hover-bg: var(--musedoc-c-gray-dark-2);
+  --musedoc-button-alt-active-border: var(--musedoc-c-gray-dark-2);
+  --musedoc-button-alt-active-text: var(--musedoc-c-text-dark-1);
+  --musedoc-button-alt-active-bg: var(--musedoc-button-alt-bg);
+
+  --musedoc-button-sponsor-border: var(--musedoc-c-gray-dark-1);
+  --musedoc-button-sponsor-text: var(--musedoc-c-text-dark-2);
+}
+
+/**
+ * Component: Custom Block
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --musedoc-custom-block-code-font-size: 13px;
+
+  --musedoc-custom-block-info-border: var(--musedoc-c-divider-light);
+  --musedoc-custom-block-info-text: var(--musedoc-c-text-2);
+  --musedoc-custom-block-info-bg: var(--musedoc-c-white-soft);
+  --musedoc-custom-block-info-code-bg: var(--musedoc-c-gray-light-4);
+
+  --musedoc-custom-block-tip-border: var(--musedoc-c-green-dimm-1);
+  --musedoc-custom-block-tip-text: var(--musedoc-c-green-darker);
+  --musedoc-custom-block-tip-bg: var(--musedoc-c-green-dimm-3);
+  --musedoc-custom-block-tip-code-bg: var(--musedoc-custom-block-tip-bg);
+
+  --musedoc-custom-block-warning-border: var(--musedoc-c-yellow-dimm-1);
+  --musedoc-custom-block-warning-text: var(--musedoc-c-yellow-darker);
+  --musedoc-custom-block-warning-bg: var(--musedoc-c-yellow-dimm-3);
+  --musedoc-custom-block-warning-code-bg: var(--musedoc-custom-block-warning-bg);
+
+  --musedoc-custom-block-danger-border: var(--musedoc-c-red-dimm-1);
+  --musedoc-custom-block-danger-text: var(--musedoc-c-red-darker);
+  --musedoc-custom-block-danger-bg: var(--musedoc-c-red-dimm-3);
+  --musedoc-custom-block-danger-code-bg: var(--musedoc-custom-block-danger-bg);
+}
+
+.dark {
+  --musedoc-custom-block-info-border: var(--musedoc-c-divider-light);
+  --musedoc-custom-block-info-bg: var(--musedoc-c-black-mute);
+  --musedoc-custom-block-info-code-bg: var(--musedoc-c-gray-dark-4);
+
+  --musedoc-custom-block-tip-border: var(--musedoc-c-green-dimm-2);
+  --musedoc-custom-block-tip-text: var(--musedoc-c-green-light);
+
+  --musedoc-custom-block-warning-border: var(--musedoc-c-yellow-dimm-2);
+  --musedoc-custom-block-warning-text: var(--musedoc-c-yellow-light);
+
+  --musedoc-custom-block-danger-border: var(--musedoc-c-red-dimm-2);
+  --musedoc-custom-block-danger-text: var(--musedoc-c-red-light);
+}
+
+/**
+ * Component: Nav
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --musedoc-nav-height: 56px;
+}
+
+/**
+ * Component: Sidebar
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --musedoc-sidebar-width: 272px;
+}
+
+/**
+ * Component: Home
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --musedoc-home-hero-name-color: transparent;
+  --musedoc-home-hero-name-background: -webkit-linear-gradient(
+    120deg,
+    var(--musedoc-c-brand) 30%,
+    #41d1ff
+  );
+
+  --musedoc-home-hero-image-background-image: none;
+  --musedoc-home-hero-image-filter: none;
+}
+
+/**
+ * Shadows
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --musedoc-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.04),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+  --musedoc-shadow-2: 0 3px 12px rgba(0, 0, 0, 0.07),
+    0 1px 4px rgba(0, 0, 0, 0.07);
+  --musedoc-shadow-3: 0 12px 32px rgba(0, 0, 0, 0.1),
+    0 2px 6px rgba(0, 0, 0, 0.08);
+  --musedoc-shadow-4: 0 14px 44px rgba(0, 0, 0, 0.12),
+    0 3px 9px rgba(0, 0, 0, 0.12);
+  --musedoc-shadow-5: 0 18px 56px rgba(0, 0, 0, 0.16),
+    0 4px 12px rgba(0, 0, 0, 0.16);
+}

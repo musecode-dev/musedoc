@@ -15,7 +15,9 @@ export async function createVitePlugins(
   return [
     pluginUnocss(unocssOptions),
     pluginIndexHtml(),
-    pluginReact(),
+    pluginReact({
+      jsxRuntime: 'automatic'
+    }),
     pluginConfig(config, restartServer),
     pluginRoutes({
       root: config.root,

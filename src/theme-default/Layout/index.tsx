@@ -1,6 +1,10 @@
 // import { useState } from 'react';
 // import { Content } from '@runtime';
+import { Nav } from '../components/Nav';
 import { usePageData } from '../../runtime';
+import '../style/base.css';
+import '../style/var.css';
+import 'uno.css';
 
 export function Layout() {
   const pageData = usePageData();
@@ -16,5 +20,6 @@ export function Layout() {
       return <div>404</div>;
     }
   };
-  return <div>{getContent()}</div>;
+  console.log(getContent());
+  return <div>{<Nav />}</div>;
 }

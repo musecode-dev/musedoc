@@ -113,6 +113,11 @@ ${relative(config.root, ctx.file)} changed, restarting server...`
           alias: {
             "@runtime": join2(PACKAGE_ROOT, "src", "runtime", "index.ts")
           }
+        },
+        css: {
+          modules: {
+            localsConvention: "camelCaseOnly"
+          }
         }
       };
     }
@@ -177,8 +182,9 @@ var RouteService = class {
       export const routes = [
         ${this.#routeData.map((route, index) => {
       return `{
-            path: '${route.routePath}',
-            element: React.createElement(Route${index})
+              path: '${route.routePath}',
+              element: React.createElement(Route${index}),
+              preload: () => import('${route.absolutePath}')
           }`;
     }).join(",\n")}
       ]
@@ -590,7 +596,15 @@ async function createPluginMdx() {
 // src/node/unocssOptions.ts
 import { presetAttributify, presetWind, presetIcons } from "unocss";
 var options = {
-  presets: [presetAttributify(), presetWind(), presetIcons()]
+  presets: [presetAttributify(), presetWind(), presetIcons()],
+  rules: [
+    [
+      /^divider-(\w+)$/,
+      ([, w]) => ({
+        [`border-${w}`]: "1px solid var(--musedoc-c-divider-light)"
+      })
+    ]
+  ]
 };
 var unocssOptions_default = options;
 
@@ -599,7 +613,9 @@ async function createVitePlugins(config, restartServer, isSSR = false) {
   return [
     pluginUnocss(unocssOptions_default),
     pluginIndexHtml(),
-    pluginReact(),
+    pluginReact({
+      jsxRuntime: "automatic"
+    }),
     pluginConfig(config, restartServer),
     pluginRoutes({
       root: config.root,

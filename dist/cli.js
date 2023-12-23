@@ -112,6 +112,11 @@ ${_path.relative.call(void 0, config.root, ctx.file)} changed, restarting server
           alias: {
             "@runtime": _path.join.call(void 0, PACKAGE_ROOT, "src", "runtime", "index.ts")
           }
+        },
+        css: {
+          modules: {
+            localsConvention: "camelCaseOnly"
+          }
         }
       };
     }
@@ -176,8 +181,9 @@ var RouteService = class {
       export const routes = [
         ${this.#routeData.map((route, index) => {
       return `{
-            path: '${route.routePath}',
-            element: React.createElement(Route${index})
+              path: '${route.routePath}',
+              element: React.createElement(Route${index}),
+              preload: () => import('${route.absolutePath}')
           }`;
     }).join(",\n")}
       ]
@@ -589,7 +595,15 @@ async function createPluginMdx() {
 // src/node/unocssOptions.ts
 var _unocss = require('unocss');
 var options = {
-  presets: [_unocss.presetAttributify.call(void 0, ), _unocss.presetWind.call(void 0, ), _unocss.presetIcons.call(void 0, )]
+  presets: [_unocss.presetAttributify.call(void 0, ), _unocss.presetWind.call(void 0, ), _unocss.presetIcons.call(void 0, )],
+  rules: [
+    [
+      /^divider-(\w+)$/,
+      ([, w]) => ({
+        [`border-${w}`]: "1px solid var(--musedoc-c-divider-light)"
+      })
+    ]
+  ]
 };
 var unocssOptions_default = options;
 
@@ -598,7 +612,9 @@ async function createVitePlugins(config, restartServer, isSSR = false) {
   return [
     _vite4.default.call(void 0, unocssOptions_default),
     pluginIndexHtml(),
-    _pluginreact2.default.call(void 0, ),
+    _pluginreact2.default.call(void 0, {
+      jsxRuntime: "automatic"
+    }),
     pluginConfig(config, restartServer),
     pluginRoutes({
       root: config.root,
