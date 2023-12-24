@@ -34,6 +34,7 @@ var SERVER_ENTRY_PATH = _path.join.call(void 0,
   "ssr-entry.tsx"
 );
 var MD_REGEX = /\.mdx?$/;
+var PUBLIC_DIR = "public";
 
 // src/node/plugin-musedoc/indexHtml.ts
 function pluginIndexHtml() {
@@ -80,6 +81,8 @@ function pluginIndexHtml() {
 
 // src/node/plugin-musedoc/config.ts
 
+var _fsextra = require('fs-extra'); var _fsextra2 = _interopRequireDefault(_fsextra);
+var _sirv = require('sirv'); var _sirv2 = _interopRequireDefault(_sirv);
 var SITE_DATA_ID = "musedoc:site-data";
 function pluginConfig(config, restartServer) {
   return {
@@ -119,6 +122,12 @@ ${_path.relative.call(void 0, config.root, ctx.file)} changed, restarting server
           }
         }
       };
+    },
+    configureServer(server) {
+      const publicDir = _path2.default.join(config.root, PUBLIC_DIR);
+      if (_fsextra2.default.pathExistsSync(publicDir)) {
+        server.middlewares.use(_sirv2.default.call(void 0, publicDir));
+      }
     }
   };
 }
@@ -695,7 +704,7 @@ async function createDevServer(root, restartServer) {
 
 // src/node/build.ts
 
-var _fsextra = require('fs-extra'); var _fsextra2 = _interopRequireDefault(_fsextra);
+
 
 async function bundle(root, config) {
   const resolveViteConfig = async (isServer) => ({

@@ -35,6 +35,7 @@ var SERVER_ENTRY_PATH = join(
   "ssr-entry.tsx"
 );
 var MD_REGEX = /\.mdx?$/;
+var PUBLIC_DIR = "public";
 
 // src/node/plugin-musedoc/indexHtml.ts
 function pluginIndexHtml() {
@@ -80,7 +81,9 @@ function pluginIndexHtml() {
 }
 
 // src/node/plugin-musedoc/config.ts
-import { join as join2, relative } from "path";
+import path2, { join as join2, relative } from "path";
+import fs from "fs-extra";
+import sirv from "sirv";
 var SITE_DATA_ID = "musedoc:site-data";
 function pluginConfig(config, restartServer) {
   return {
@@ -120,12 +123,18 @@ ${relative(config.root, ctx.file)} changed, restarting server...`
           }
         }
       };
+    },
+    configureServer(server) {
+      const publicDir = path2.join(config.root, PUBLIC_DIR);
+      if (fs.pathExistsSync(publicDir)) {
+        server.middlewares.use(sirv(publicDir));
+      }
     }
   };
 }
 
 // src/node/plugin-routes/RouteService.ts
-import path2 from "path";
+import path3 from "path";
 import fastGlob from "fast-glob";
 import { normalizePath } from "vite";
 var RouteService = class {
@@ -142,7 +151,7 @@ var RouteService = class {
     }).sort();
     files.forEach((file) => {
       const fileRelativePath = normalizePath(
-        path2.relative(this.#scanDir, file)
+        path3.relative(this.#scanDir, file)
       );
       const routePath = this.normalizeRoutePath(fileRelativePath);
       this.#routeData.push({
@@ -696,7 +705,7 @@ async function createDevServer(root, restartServer) {
 
 // src/node/build.ts
 import { dirname, join as join3 } from "path";
-import fs from "fs-extra";
+import fs2 from "fs-extra";
 import { build as viteBuild } from "vite";
 async function bundle(root, config) {
   const resolveViteConfig = async (isServer) => ({
@@ -762,11 +771,11 @@ async function renderPage(render, routes, root, clientBundle) {
         </html>
       `.trim();
       const fileName = routePath.endsWith("/") ? `${routePath}index.html` : `${routePath}.html`;
-      await fs.ensureDir(join3(root, "build", dirname(fileName)));
-      await fs.writeFile(join3(root, "build", fileName), html);
+      await fs2.ensureDir(join3(root, "build", dirname(fileName)));
+      await fs2.writeFile(join3(root, "build", fileName), html);
     })
   );
-  await fs.remove(join3(root, ".temp"));
+  await fs2.remove(join3(root, ".temp"));
 }
 async function build(root = process.cwd(), config) {
   const [clientBundle] = await bundle(root, config);

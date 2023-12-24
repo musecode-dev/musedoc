@@ -1,7 +1,9 @@
-import { join, relative } from 'path';
+import path, { join, relative } from 'path';
+import fs from 'fs-extra';
 import { Plugin } from 'vite';
+import sirv from 'sirv';
 import { SiteConfig } from '../../shared/types';
-import { PACKAGE_ROOT } from '../constants';
+import { PACKAGE_ROOT, PUBLIC_DIR } from '../constants';
 
 const SITE_DATA_ID = 'musedoc:site-data';
 
@@ -47,6 +49,12 @@ export function pluginConfig(
           }
         }
       };
+    },
+    configureServer(server) {
+      const publicDir = path.join(config.root, PUBLIC_DIR);
+      if (fs.pathExistsSync(publicDir)) {
+        server.middlewares.use(sirv(publicDir));
+      }
     }
   };
 }

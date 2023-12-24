@@ -6,6 +6,7 @@ import '../style/base.css';
 import '../style/var.css';
 import 'uno.css';
 import { HomeLayout } from './HomeLayout';
+import { DocLayout } from './DocLayout';
 
 export function Layout() {
   const pageData = usePageData();
@@ -16,7 +17,7 @@ export function Layout() {
     if (pageType === 'home') {
       return <HomeLayout />;
     } else if (pageType === 'doc') {
-      return <div>doc</div>;
+      return <DocLayout />;
     } else {
       return <div>404</div>;
     }
