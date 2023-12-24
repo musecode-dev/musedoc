@@ -1,11 +1,12 @@
 import { useLocation } from 'react-router-dom';
 import { usePageData, Content } from '@runtime';
 import { Sidebar } from '../../components/Sidebar';
+import { Aside } from '../../components/Aside';
 import { DocFooter } from '../../components/DocFooter';
 import styles from './index.module.scss';
 
 export function DocLayout() {
-  const { siteData } = usePageData();
+  const { siteData, toc } = usePageData();
   const sidebarData = siteData?.themeConfig?.sidebar || {};
   const { pathname } = useLocation();
 
@@ -19,12 +20,15 @@ export function DocLayout() {
   return (
     <div>
       <Sidebar sidebarData={matchedSidebar} pathname={pathname} />
-      <div className={styles.content}>
-        <div>
+      <div className={styles.content} flex="~">
+        <div className={styles.docContent}>
           <div className="musedoc-doc">
             <Content />
           </div>
           <DocFooter />
+        </div>
+        <div className={styles.asideContainer}>
+          <Aside headers={toc} __musedoc />
         </div>
       </div>
     </div>

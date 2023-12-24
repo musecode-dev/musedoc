@@ -71,6 +71,7 @@ export interface PageData {
 export interface PageModule {
   default: React.ComponentType;
   frontmatter?: FrontMatter;
+  toc?: Header[];
   [key: string]: unknown;
 }
 
