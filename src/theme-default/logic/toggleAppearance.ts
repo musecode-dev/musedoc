@@ -2,8 +2,6 @@ const APPEARANCE_KEY = 'appearance';
 
 const classList = document.documentElement.classList;
 
-console.log(classList);
-
 const setClassList = (isDark = false) => {
   if (isDark) {
     classList.add('dark');

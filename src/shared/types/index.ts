@@ -11,7 +11,7 @@ export type SidebarItem =
 
 export interface SidebarGroup {
   text?: string;
-  items: SidebarItem;
+  items: SidebarItem[];
 }
 
 export interface Sidebar {

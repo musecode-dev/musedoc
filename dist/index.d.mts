@@ -14,7 +14,7 @@ type SidebarItem = {
 };
 interface SidebarGroup {
     text?: string;
-    items: SidebarItem;
+    items: SidebarItem[];
 }
 interface Sidebar {
     [path: string]: SidebarGroup[];
