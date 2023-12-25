@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { Header } from 'shared/types';
 import { bindingAsideScroll, scrollToTarget } from '../../logic/asideScroll';
-
+import { useHeaders } from '../../logic/useHeaders';
 interface AsideProps {
   headers: Header[];
 }
 
 export function Aside(props: AsideProps) {
-  const { headers = [] } = props;
+  const { headers: rawHeaders = [] } = props;
+  const headers = useHeaders(rawHeaders);
   // 是否展示大纲栏
   const hasOutline = headers.length > 0;
   // 当前标题进行高亮处理

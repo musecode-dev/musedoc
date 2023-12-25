@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 declare module 'musedoc:site-data' {
   import type { UserConfig } from 'shared/types';
   const siteData: UserConfig;
@@ -10,10 +12,10 @@ declare module 'musedoc:routes' {
   export { routes };
 }
 
-declare module '*.module.scss' {
-  const classes: { [key: string]: string };
-  export default classes;
-}
+// declare module '*.module.scss' {
+//   const classes: { [key: string]: string };
+//   export default classes;
+// }
 
 // declare namespace React {
 //   // interface HTMLAttributes<T> extends HTMLAttributes<T> {
