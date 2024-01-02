@@ -95,3 +95,7 @@ export interface Feature {
   title: string;
   details: string;
 }
+
+export type PropsWithIsland = {
+  __island?: boolean;
+};

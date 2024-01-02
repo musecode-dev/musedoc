@@ -30,7 +30,9 @@ export function bindingAsideScroll() {
 
   const setActiveLink = () => {
     links = Array.from(
-      document.querySelectorAll<HTMLAnchorElement>('.island-doc .header-anchor')
+      document.querySelectorAll<HTMLAnchorElement>(
+        '.musedoc-doc .header-anchor'
+      )
     ).filter((item) => item.parentElement?.tagName !== 'H1');
 
     const isBottom =

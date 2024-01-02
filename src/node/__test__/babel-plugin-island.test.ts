@@ -22,8 +22,6 @@ describe('babel-plugin-island', () => {
 
     const result = await transformAsync(code, babelOptions);
 
-    console.log('result---- ', result);
-
     expect(result?.code).toContain(
       `__island: "${ISLAND_PATH}${MASK_SPLITTER}${IMPORTER_PATH}"`
     );

@@ -28,7 +28,7 @@ export function DocLayout() {
           <DocFooter />
         </div>
         <div className={styles.asideContainer}>
-          <Aside headers={toc} __musedoc />
+          <Aside headers={toc} __island />
         </div>
       </div>
     </div>

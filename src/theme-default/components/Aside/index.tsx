@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import { Header } from 'shared/types';
+import { Header, PropsWithIsland } from 'shared/types';
 import { bindingAsideScroll, scrollToTarget } from '../../logic/asideScroll';
 import { useHeaders } from '../../logic/useHeaders';
 interface AsideProps {
   headers: Header[];
 }
 
-export function Aside(props: AsideProps) {
+export function Aside(props: AsideProps & PropsWithIsland) {
   const { headers: rawHeaders = [] } = props;
   const headers = useHeaders(rawHeaders);
   // 是否展示大纲栏
@@ -47,7 +47,7 @@ export function Aside(props: AsideProps) {
     <div
       flex="~ col 1"
       style={{
-        width: 'var(--island-aside-width)'
+        width: 'var(--musedoc-aside-width)'
       }}
     >
       <div>

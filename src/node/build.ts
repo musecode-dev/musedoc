@@ -8,6 +8,7 @@ import { SiteConfig } from '../shared/types';
 // import { pluginConfig } from './plugin-musedoc/config';
 import { createVitePlugins } from './vitePlugins';
 import { Route } from 'node/plugin-routes';
+import { RenderResult } from '../runtime/ssr-entry';
 
 export async function bundle(root: string, config: SiteConfig) {
   const resolveViteConfig = async (
@@ -51,7 +52,7 @@ export async function bundle(root: string, config: SiteConfig) {
 }
 
 export async function renderPage(
-  render: (pagePath: string) => string,
+  render: (pagePath: string) => RenderResult,
   routes: Route[],
   root: string,
   clientBundle: RollupOutput
@@ -65,7 +66,8 @@ export async function renderPage(
   await Promise.all(
     routes.map(async (route) => {
       const routePath = route.path;
-      const appHtml = await render(routePath);
+      const { appHtml } = await render(routePath);
+
       const html = `
         <!DOCTYPE html>
           <html lang="en">

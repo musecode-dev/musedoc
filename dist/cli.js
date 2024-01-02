@@ -35,6 +35,7 @@ var SERVER_ENTRY_PATH = _path.join.call(void 0,
 );
 var MD_REGEX = /\.mdx?$/;
 var PUBLIC_DIR = "public";
+var MASK_SPLITTER = "!!ISLAND!!";
 
 // src/node/plugin-musedoc/indexHtml.ts
 function pluginIndexHtml() {
@@ -672,13 +673,63 @@ var options = {
 };
 var unocssOptions_default = options;
 
+// src/node/babel-plugin-island.ts
+var _helperpluginutils = require('@babel/helper-plugin-utils');
+var _core = require('@babel/core');
+
+var babel_plugin_island_default = _helperpluginutils.declare.call(void 0, (api) => {
+  api.assertVersion(7);
+  const visitor = {
+    // 访问 JSX 开始标签
+    JSXOpeningElement(path5, state) {
+      const name = path5.node.name;
+      let bindingName = "";
+      if (name.type === "JSXIdentifier") {
+        bindingName = name.name;
+      } else if (name.type === "JSXMemberExpression") {
+        let object = name.object;
+        while (_core.types.isJSXMemberExpression(object)) {
+          object = object.object;
+        }
+        bindingName = object.name;
+      } else {
+        return;
+      }
+      const binding = path5.scope.getBinding(bindingName);
+      if (_optionalChain([binding, 'optionalAccess', _32 => _32.path, 'access', _33 => _33.parent, 'access', _34 => _34.type]) === "ImportDeclaration") {
+        const source = binding.path.parent.source;
+        const attributes = path5.container.openingElement.attributes;
+        for (let i = 0; i < attributes.length; i++) {
+          const name2 = attributes[i].name;
+          if (_optionalChain([name2, 'optionalAccess', _35 => _35.name]) === "__island") {
+            attributes[i].value = _core.types.stringLiteral(
+              `${source.value}${MASK_SPLITTER}${_vite.normalizePath.call(void 0, 
+                state.filename || ""
+              )}`
+            );
+          }
+        }
+      }
+    }
+  };
+  return {
+    name: "transform-jsx-island",
+    visitor
+  };
+});
+
 // src/node/vitePlugins.ts
+
 async function createVitePlugins(config, restartServer, isSSR = false) {
   return [
     _vite4.default.call(void 0, unocssOptions_default),
     pluginIndexHtml(),
     _pluginreact2.default.call(void 0, {
-      jsxRuntime: "automatic"
+      jsxRuntime: "automatic",
+      jsxImportSource: isSSR ? _path2.default.join(PACKAGE_ROOT, "src", "runtime") : "react",
+      babel: {
+        plugins: [babel_plugin_island_default]
+      }
     }),
     pluginConfig(config, restartServer),
     pluginRoutes({
@@ -775,7 +826,7 @@ async function renderPage(render, routes, root, clientBundle) {
     
           <body>
             <div id="root">${appHtml}</div>
-            <script type="module" src="./${_optionalChain([clientChunk, 'optionalAccess', _32 => _32.fileName])}"></script>
+            <script type="module" src="./${_optionalChain([clientChunk, 'optionalAccess', _36 => _36.fileName])}"></script>
           </body>
     
         </html>

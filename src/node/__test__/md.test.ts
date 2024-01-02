@@ -34,7 +34,7 @@ describe('Markdown compile cases', async () => {
 
 ## h2 \`code\`
 
-### h3 [link](https://islandjs.dev)
+### h3 [link](https://musecode.dev)
 
 #### h4
 

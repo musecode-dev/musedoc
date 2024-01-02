@@ -36,6 +36,7 @@ var SERVER_ENTRY_PATH = join(
 );
 var MD_REGEX = /\.mdx?$/;
 var PUBLIC_DIR = "public";
+var MASK_SPLITTER = "!!ISLAND!!";
 
 // src/node/plugin-musedoc/indexHtml.ts
 function pluginIndexHtml() {
@@ -673,13 +674,63 @@ var options = {
 };
 var unocssOptions_default = options;
 
+// src/node/babel-plugin-island.ts
+import { declare } from "@babel/helper-plugin-utils";
+import { types as t } from "@babel/core";
+import { normalizePath as normalizePath2 } from "vite";
+var babel_plugin_island_default = declare((api) => {
+  api.assertVersion(7);
+  const visitor = {
+    // 访问 JSX 开始标签
+    JSXOpeningElement(path5, state) {
+      const name = path5.node.name;
+      let bindingName = "";
+      if (name.type === "JSXIdentifier") {
+        bindingName = name.name;
+      } else if (name.type === "JSXMemberExpression") {
+        let object = name.object;
+        while (t.isJSXMemberExpression(object)) {
+          object = object.object;
+        }
+        bindingName = object.name;
+      } else {
+        return;
+      }
+      const binding = path5.scope.getBinding(bindingName);
+      if (binding?.path.parent.type === "ImportDeclaration") {
+        const source = binding.path.parent.source;
+        const attributes = path5.container.openingElement.attributes;
+        for (let i = 0; i < attributes.length; i++) {
+          const name2 = attributes[i].name;
+          if (name2?.name === "__island") {
+            attributes[i].value = t.stringLiteral(
+              `${source.value}${MASK_SPLITTER}${normalizePath2(
+                state.filename || ""
+              )}`
+            );
+          }
+        }
+      }
+    }
+  };
+  return {
+    name: "transform-jsx-island",
+    visitor
+  };
+});
+
 // src/node/vitePlugins.ts
+import path4 from "path";
 async function createVitePlugins(config, restartServer, isSSR = false) {
   return [
     pluginUnocss(unocssOptions_default),
     pluginIndexHtml(),
     pluginReact({
-      jsxRuntime: "automatic"
+      jsxRuntime: "automatic",
+      jsxImportSource: isSSR ? path4.join(PACKAGE_ROOT, "src", "runtime") : "react",
+      babel: {
+        plugins: [babel_plugin_island_default]
+      }
     }),
     pluginConfig(config, restartServer),
     pluginRoutes({
