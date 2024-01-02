@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from "./client-entry-q9kgvNLk.js";
+import { j as jsxRuntimeExports } from "./client-entry-opDNHntt.js";
 const frontmatter = {
   "pageType": "home",
   "hero": {

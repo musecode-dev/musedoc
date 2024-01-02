@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from "./client-entry-q9kgvNLk.js";
+import { j as jsxRuntimeExports } from "./client-entry-opDNHntt.js";
 const frontmatter = void 0;
 const toc = [{
   "id": "框架定位",

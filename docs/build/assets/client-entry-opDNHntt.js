@@ -9124,36 +9124,36 @@ var loadable$2 = loadable;
 loadable$2.lib = loadable$1;
 var lazy$2 = lazy;
 lazy$2.lib = lazy$1;
-const Route0 = loadable$2(() => __vitePreload(() => import("./a-SAZjZwD7.js"), true ? __vite__mapDeps([]) : void 0));
-const Route1 = loadable$2(() => __vitePreload(() => import("./b-1hKmoeW8.js"), true ? __vite__mapDeps([]) : void 0));
-const Route2 = loadable$2(() => __vitePreload(() => import("./c-nZazcGZV.js"), true ? __vite__mapDeps([]) : void 0));
-const Route3 = loadable$2(() => __vitePreload(() => import("./index-_CYiK89S.js"), true ? __vite__mapDeps([]) : void 0));
-const Route4 = loadable$2(() => __vitePreload(() => import("./index-G0Qs2JjL.js"), true ? __vite__mapDeps([]) : void 0));
+const Route0 = loadable$2(() => __vitePreload(() => import("./a-9faQ_Li3.js"), true ? __vite__mapDeps([]) : void 0));
+const Route1 = loadable$2(() => __vitePreload(() => import("./b-dYpLgaO9.js"), true ? __vite__mapDeps([]) : void 0));
+const Route2 = loadable$2(() => __vitePreload(() => import("./c-rR5TsTMi.js"), true ? __vite__mapDeps([]) : void 0));
+const Route3 = loadable$2(() => __vitePreload(() => import("./index-dUW06AfB.js"), true ? __vite__mapDeps([]) : void 0));
+const Route4 = loadable$2(() => __vitePreload(() => import("./index-dIUV_kjj.js"), true ? __vite__mapDeps([]) : void 0));
 const routes = [
   {
     path: "/guide/a",
     element: React.createElement(Route0),
-    preload: () => __vitePreload(() => import("./a-SAZjZwD7.js"), true ? __vite__mapDeps([]) : void 0)
+    preload: () => __vitePreload(() => import("./a-9faQ_Li3.js"), true ? __vite__mapDeps([]) : void 0)
   },
   {
     path: "/guide/b",
     element: React.createElement(Route1),
-    preload: () => __vitePreload(() => import("./b-1hKmoeW8.js"), true ? __vite__mapDeps([]) : void 0)
+    preload: () => __vitePreload(() => import("./b-dYpLgaO9.js"), true ? __vite__mapDeps([]) : void 0)
   },
   {
     path: "/guide/c",
     element: React.createElement(Route2),
-    preload: () => __vitePreload(() => import("./c-nZazcGZV.js"), true ? __vite__mapDeps([]) : void 0)
+    preload: () => __vitePreload(() => import("./c-rR5TsTMi.js"), true ? __vite__mapDeps([]) : void 0)
   },
   {
     path: "/guide/",
     element: React.createElement(Route3),
-    preload: () => __vitePreload(() => import("./index-_CYiK89S.js"), true ? __vite__mapDeps([]) : void 0)
+    preload: () => __vitePreload(() => import("./index-dUW06AfB.js"), true ? __vite__mapDeps([]) : void 0)
   },
   {
     path: "/",
     element: React.createElement(Route4),
-    preload: () => __vitePreload(() => import("./index-G0Qs2JjL.js"), true ? __vite__mapDeps([]) : void 0)
+    preload: () => __vitePreload(() => import("./index-dIUV_kjj.js"), true ? __vite__mapDeps([]) : void 0)
   }
 ];
 const siteData = { "title": "Hello MuseDoc", "description": "SSG Framework", "themeConfig": { "nav": [{ "text": "主页", "link": "/" }, { "text": "指南", "link": "/guide" }], "sidebar": { "/guide/": [{ "text": "教程", "items": [{ "text": "快速上手", "link": "/guide/a" }, { "text": "如何安装", "link": "/guide/b" }, { "text": "注意事项", "link": "/guide/c" }] }] } }, "vite": {} };
@@ -9564,7 +9564,7 @@ function bindingAsideScroll() {
     }
   };
   const setActiveLink = () => {
-    links = Array.from(document.querySelectorAll(".island-doc .header-anchor")).filter((item) => {
+    links = Array.from(document.querySelectorAll(".musedoc-doc .header-anchor")).filter((item) => {
       var _a;
       return ((_a = item.parentElement) == null ? void 0 : _a.tagName) !== "H1";
     });
@@ -9636,7 +9636,7 @@ function Aside(props) {
     }, children: header.text }) }, header.id);
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { flex: "~ col 1", style: {
-    width: "var(--island-aside-width)"
+    width: "var(--musedoc-aside-width)"
   }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: hasOutline && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { id: "aside-container", className: "relative divider-left pl-4 text-13px font-medium", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       "div",

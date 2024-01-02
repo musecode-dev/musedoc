@@ -434,9 +434,9 @@ function visit(tree, testOrVisitor, visitorOrReverse, maybeReverse) {
 var rehypePluginPreWrapper = () => {
   return (tree) => {
     visit(tree, "element", (node) => {
-      if (node.tagName === "pre" && _optionalChain([node, 'access', _ => _.children, 'access', _2 => _2[0], 'optionalAccess', _3 => _3.type]) === "element" && _optionalChain([node, 'access', _4 => _4.children, 'access', _5 => _5[0], 'optionalAccess', _6 => _6.tagName]) === "code") {
+      if (node.tagName === "pre" && _optionalChain([node, 'access', _2 => _2.children, 'access', _3 => _3[0], 'optionalAccess', _4 => _4.type]) === "element" && _optionalChain([node, 'access', _5 => _5.children, 'access', _6 => _6[0], 'optionalAccess', _7 => _7.tagName]) === "code") {
         const codeNode = node.children[0];
-        const codeClassName = _optionalChain([codeNode, 'access', _7 => _7.properties, 'optionalAccess', _8 => _8.className, 'optionalAccess', _9 => _9.toString, 'call', _10 => _10()]) || "";
+        const codeClassName = _optionalChain([codeNode, 'access', _8 => _8.properties, 'optionalAccess', _9 => _9.className, 'optionalAccess', _10 => _10.toString, 'call', _11 => _11()]) || "";
         const lang = codeClassName.split("-")[1];
         const clonedNode = {
           type: "element",
@@ -474,10 +474,10 @@ var _hastutilfromhtml = require('hast-util-from-html');
 var rehypePluginShiki = ({ highlighter }) => {
   return (tree) => {
     visit(tree, "element", (node, index, parent) => {
-      if (node.tagName === "pre" && _optionalChain([node, 'access', _11 => _11.children, 'access', _12 => _12[0], 'optionalAccess', _13 => _13.type]) === "element" && _optionalChain([node, 'access', _14 => _14.children, 'access', _15 => _15[0], 'optionalAccess', _16 => _16.tagName]) === "code") {
+      if (node.tagName === "pre" && _optionalChain([node, 'access', _12 => _12.children, 'access', _13 => _13[0], 'optionalAccess', _14 => _14.type]) === "element" && _optionalChain([node, 'access', _15 => _15.children, 'access', _16 => _16[0], 'optionalAccess', _17 => _17.tagName]) === "code") {
         const codeNode = node.children[0];
         const codeContent = codeNode.children[0].value;
-        const codeClassName = _optionalChain([codeNode, 'access', _17 => _17.properties, 'optionalAccess', _18 => _18.className, 'optionalAccess', _19 => _19.toString, 'call', _20 => _20()]) || "";
+        const codeClassName = _optionalChain([codeNode, 'access', _18 => _18.properties, 'optionalAccess', _19 => _19.className, 'optionalAccess', _20 => _20.toString, 'call', _21 => _21()]) || "";
         const lang = codeClassName.split("-")[1];
         if (!lang) {
           return;
@@ -504,7 +504,7 @@ var remarkPluginToc = () => {
         const originText = node.children.map((child) => {
           switch (child.type) {
             case "link":
-              return _optionalChain([child, 'access', _21 => _21.children, 'optionalAccess', _22 => _22.map, 'call', _23 => _23((c) => c.value), 'access', _24 => _24.join, 'call', _25 => _25("")]);
+              return _optionalChain([child, 'access', _22 => _22.children, 'optionalAccess', _23 => _23.map, 'call', _24 => _24((c) => c.value), 'access', _25 => _25.join, 'call', _26 => _26("")]);
             default:
               return child.value;
           }
@@ -581,14 +581,14 @@ function pluginMdxHMR() {
     async transform(code, id, opts) {
       if (MD_REGEX.test(id) && !!viteReactPlugin) {
         _assert2.default.call(void 0, typeof viteReactPlugin.transform === "function");
-        const result = await _optionalChain([viteReactPlugin, 'access', _26 => _26.transform, 'optionalAccess', _27 => _27.call, 'call', _28 => _28(
+        const result = await _optionalChain([viteReactPlugin, 'access', _27 => _27.transform, 'optionalAccess', _28 => _28.call, 'call', _29 => _29(
           this,
           code,
           id + ".jsx",
           opts
         )]);
         const selfAcceptCode = "import.meta.hot.accept();";
-        if (typeof result === "object" && !_optionalChain([result, 'access', _29 => _29.code, 'optionalAccess', _30 => _30.includes, 'call', _31 => _31(selfAcceptCode)])) {
+        if (typeof result === "object" && !_optionalChain([result, 'access', _30 => _30.code, 'optionalAccess', _31 => _31.includes, 'call', _32 => _32(selfAcceptCode)])) {
           result.code += selfAcceptCode;
         }
         return result;
@@ -696,12 +696,12 @@ var babel_plugin_island_default = _helperpluginutils.declare.call(void 0, (api) 
         return;
       }
       const binding = path5.scope.getBinding(bindingName);
-      if (_optionalChain([binding, 'optionalAccess', _32 => _32.path, 'access', _33 => _33.parent, 'access', _34 => _34.type]) === "ImportDeclaration") {
+      if (_optionalChain([binding, 'optionalAccess', _33 => _33.path, 'access', _34 => _34.parent, 'access', _35 => _35.type]) === "ImportDeclaration") {
         const source = binding.path.parent.source;
         const attributes = path5.container.openingElement.attributes;
         for (let i = 0; i < attributes.length; i++) {
           const name2 = attributes[i].name;
-          if (_optionalChain([name2, 'optionalAccess', _35 => _35.name]) === "__island") {
+          if (_optionalChain([name2, 'optionalAccess', _36 => _36.name]) === "__island") {
             attributes[i].value = _core.types.stringLiteral(
               `${source.value}${MASK_SPLITTER}${_vite.normalizePath.call(void 0, 
                 state.filename || ""
@@ -805,6 +805,60 @@ async function bundle(root, config) {
     console.log(e);
   }
 }
+async function buildIsland(root, islandPathToMap) {
+  const islandsInjectCode = `
+    ${Object.entries(islandPathToMap).map(
+    ([islandName, islandPath]) => `
+      import { ${islandName} } from '${islandPath};'
+    `
+  ).join("")}
+
+    window.ISLANDS = { ${Object.keys(islandPathToMap).join(",")} };
+    window.ISLAND_PROPS = JSON.parse(
+      document.getElementById('island-props').textContent
+    );
+  `;
+  const injectId = "island:inject";
+  return _vite.build.call(void 0, {
+    mode: "production",
+    build: {
+      // 输出目录
+      outDir: _path.join.call(void 0, root, ".temp"),
+      rollupOptions: {
+        input: injectId
+      }
+    },
+    plugins: [
+      // 加载拼接的 Islands 注册模块的代码
+      {
+        name: "island:inject",
+        enforce: "post",
+        resolveId(id) {
+          if (id.includes(MASK_SPLITTER)) {
+            const [originId, importer] = id.split(MASK_SPLITTER);
+            return this.resolve(originId, importer, { skipSelf: true });
+          }
+          if (id === injectId) {
+            return id;
+          }
+        },
+        load(id) {
+          if (id === injectId) {
+            return islandsInjectCode;
+          }
+        },
+        // 对于 Islands Bundle，只需要 JS 即可，其它资源文件可以删除
+        generateBundle(_, bundle2) {
+          for (const name in bundle2) {
+            if (bundle2[name].type === "asset") {
+              delete bundle2[name];
+            }
+          }
+        }
+      }
+    ]
+  });
+}
 async function renderPage(render, routes, root, clientBundle) {
   const clientChunk = clientBundle.output.find(
     (chunk) => chunk.type === "chunk" && chunk.isEntry
@@ -813,7 +867,8 @@ async function renderPage(render, routes, root, clientBundle) {
   await Promise.all(
     routes.map(async (route) => {
       const routePath = route.path;
-      const appHtml = await render(routePath);
+      const { appHtml, islanToPathMap } = await render(routePath);
+      await buildIsland(root, islanToPathMap);
       const html = `
         <!DOCTYPE html>
           <html lang="en">
@@ -826,7 +881,7 @@ async function renderPage(render, routes, root, clientBundle) {
     
           <body>
             <div id="root">${appHtml}</div>
-            <script type="module" src="./${_optionalChain([clientChunk, 'optionalAccess', _36 => _36.fileName])}"></script>
+            <script type="module" src="./${_optionalChain([clientChunk, 'optionalAccess', _37 => _37.fileName])}"></script>
           </body>
     
         </html>
