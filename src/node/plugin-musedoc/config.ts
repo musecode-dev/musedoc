@@ -52,7 +52,7 @@ export function pluginConfig(
     },
     configureServer(server) {
       const publicDir = path.join(config.root, PUBLIC_DIR);
-      if (fs.pathExistsSync(publicDir)) {
+      if (fs.existsSync(publicDir)) {
         server.middlewares.use(sirv(publicDir));
       }
     }
