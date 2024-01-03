@@ -706,8 +706,8 @@ var babel_plugin_island_default = declare((api) => {
   api.assertVersion(7);
   const visitor = {
     // 访问 JSX 开始标签
-    JSXOpeningElement(path5, state) {
-      const name = path5.node.name;
+    JSXOpeningElement(path6, state) {
+      const name = path6.node.name;
       let bindingName = "";
       if (name.type === "JSXIdentifier") {
         bindingName = name.name;
@@ -720,10 +720,10 @@ var babel_plugin_island_default = declare((api) => {
       } else {
         return;
       }
-      const binding = path5.scope.getBinding(bindingName);
+      const binding = path6.scope.getBinding(bindingName);
       if (binding?.path.parent.type === "ImportDeclaration") {
         const source = binding.path.parent.source;
-        const attributes = path5.container.openingElement.attributes;
+        const attributes = path6.container.openingElement.attributes;
         for (let i = 0; i < attributes.length; i++) {
           const name2 = attributes[i].name;
           if (name2?.name === "__island") {
@@ -903,7 +903,12 @@ async function renderPages(render, routes, root, clientBundle) {
     (chunk) => chunk.type === "chunk" && chunk.isEntry
   );
   await Promise.all(
-    routes.map(async (route) => {
+    [
+      ...routes,
+      {
+        path: "/404"
+      }
+    ].map(async (route) => {
       const routePath = route.path;
       const helmetContext = {
         context: {}
@@ -977,6 +982,46 @@ async function build(root = process.cwd(), config) {
   }
 }
 
+// src/node/preview.ts
+import compression from "compression";
+import polka from "polka";
+import path5 from "path";
+import fs3 from "fs-extra";
+import sirv2 from "sirv";
+var DEFAULT_PORT = 4173;
+async function preview(root, { port }) {
+  const config = await resolveConfig(root, "serve", "production");
+  const listenPort = port ?? DEFAULT_PORT;
+  const outputDir = path5.resolve(root, "build");
+  const notFoundPage = fs3.readFileSync(
+    path5.resolve(outputDir, "404.html"),
+    "utf-8"
+  );
+  const compress = compression();
+  const serve = sirv2(outputDir, {
+    etag: true,
+    maxAge: 31536e3,
+    immutable: true,
+    setHeaders(res, pathname) {
+      if (pathname.endsWith(".html")) {
+        res.setHeader("Cache-Control", "no-cache");
+      }
+    }
+  });
+  const onNoMatch = (req, res) => {
+    res.statusCode = 404;
+    res.end(notFoundPage);
+  };
+  polka({ onNoMatch }).use(compress, serve).listen(listenPort, (err) => {
+    if (err) {
+      throw err;
+    }
+    console.log(
+      `> Preview server is running at http://localhost:${listenPort}`
+    );
+  });
+}
+
 // src/node/cli.ts
 var cli = cac("musedoc").version("0.0.1").help();
 cli.command("dev [root]", "start dev server").action(async (root) => {
@@ -995,6 +1040,14 @@ cli.command("build [root]", "build for production").action(async (root) => {
     root = resolve(root);
     const config = await resolveConfig(root, "build", "production");
     await build(root, config);
+  } catch (e) {
+    console.log(e);
+  }
+});
+cli.command("preview [root]", "preview production build").option("--port <port>", "port to use for preview server").action(async (root, { port }) => {
+  try {
+    root = resolve(root);
+    await preview(root, { port });
   } catch (e) {
     console.log(e);
   }
