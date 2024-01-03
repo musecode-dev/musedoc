@@ -22,9 +22,15 @@ export const remarkPluginToc: Plugin<[], Root> = () => {
     // 初始化 toc 数组
     const toc: TocItem[] = [];
 
+    let title = '';
+
     visit(tree, 'heading', (node) => {
       if (!node.depth || !node.children) {
         return;
+      }
+
+      if (node.depth === 1) {
+        title = (node.children[0] as ChildNode).value;
       }
 
       // h2 ~ h4
@@ -61,5 +67,19 @@ export const remarkPluginToc: Plugin<[], Root> = () => {
         })
       }
     } as MdxjsEsm);
+
+    if (title) {
+      const insertedTitle = `export const title = '${title}'`;
+      tree.children.push({
+        type: 'mdxjsEsm',
+        value: insertedTitle,
+        data: {
+          estree: parse(insertedTitle, {
+            ecmaVersion: 2020,
+            sourceType: 'module'
+          })
+        }
+      } as MdxjsEsm);
+    }
   };
 };

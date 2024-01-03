@@ -36,6 +36,13 @@ var SERVER_ENTRY_PATH = _path.join.call(void 0,
 var MD_REGEX = /\.mdx?$/;
 var PUBLIC_DIR = "public";
 var MASK_SPLITTER = "!!ISLAND!!";
+var CLIENT_OUTPUT = "build";
+var EXTERNALS = [
+  "react",
+  "react-dom",
+  "react-dom/client",
+  "react/jsx-runtime"
+];
 
 // src/node/plugin-musedoc/indexHtml.ts
 function pluginIndexHtml() {
@@ -496,9 +503,13 @@ var _acorn = require('acorn');
 var remarkPluginToc = () => {
   return (tree) => {
     const toc = [];
+    let title = "";
     visit(tree, "heading", (node) => {
       if (!node.depth || !node.children) {
         return;
+      }
+      if (node.depth === 1) {
+        title = node.children[0].value;
       }
       if (node.depth > 1 && node.depth < 5) {
         const originText = node.children.map((child) => {
@@ -528,6 +539,19 @@ var remarkPluginToc = () => {
         })
       }
     });
+    if (title) {
+      const insertedTitle = `export const title = '${title}'`;
+      tree.children.push({
+        type: "mdxjsEsm",
+        value: insertedTitle,
+        data: {
+          estree: _acorn.parse.call(void 0, insertedTitle, {
+            ecmaVersion: 2020,
+            sourceType: "module"
+          })
+        }
+      });
+    }
   };
 };
 
@@ -789,7 +813,8 @@ async function bundle(root, config) {
         input: isServer ? SERVER_ENTRY_PATH : CLIENT_ENTRY_PATH,
         output: {
           format: isServer ? "cjs" : "esm"
-        }
+        },
+        external: EXTERNALS
       }
     }
   });
@@ -800,12 +825,20 @@ async function bundle(root, config) {
       // server build
       _vite.build.call(void 0, await resolveViteConfig(true))
     ]);
+    const publicDir = _path.join.call(void 0, root, "public");
+    if (_fsextra2.default.pathExistsSync(publicDir)) {
+      await _fsextra2.default.copy(publicDir, _path.join.call(void 0, root, CLIENT_OUTPUT));
+    }
+    const vendorsDir = _path.join.call(void 0, PACKAGE_ROOT, "vendors");
+    if (_fsextra2.default.pathExistsSync(vendorsDir)) {
+      await _fsextra2.default.copy(vendorsDir, _path.join.call(void 0, root, CLIENT_OUTPUT));
+    }
     return [clientBundle, serverBundle];
   } catch (e) {
     console.log(e);
   }
 }
-async function buildIsland(root, islandPathToMap) {
+async function buildIslands(root, islandPathToMap) {
   const islandsInjectCode = `
     ${Object.entries(islandPathToMap).map(
     ([islandName, islandPath]) => `
@@ -821,11 +854,15 @@ async function buildIsland(root, islandPathToMap) {
   const injectId = "island:inject";
   return _vite.build.call(void 0, {
     mode: "production",
+    esbuild: {
+      jsx: "automatic"
+    },
     build: {
       // 输出目录
       outDir: _path.join.call(void 0, root, ".temp"),
       rollupOptions: {
-        input: injectId
+        input: injectId,
+        external: EXTERNALS
       }
     },
     plugins: [
@@ -859,29 +896,64 @@ async function buildIsland(root, islandPathToMap) {
     ]
   });
 }
-async function renderPage(render, routes, root, clientBundle) {
+async function renderPages(render, routes, root, clientBundle) {
+  console.log("Rendering page in server side...");
   const clientChunk = clientBundle.output.find(
     (chunk) => chunk.type === "chunk" && chunk.isEntry
   );
-  console.log("Rendering page in server side...");
   await Promise.all(
     routes.map(async (route) => {
       const routePath = route.path;
-      const { appHtml, islanToPathMap } = await render(routePath);
-      await buildIsland(root, islanToPathMap);
+      const helmetContext = {
+        context: {}
+      };
+      const {
+        appHtml,
+        islanToPathMap,
+        islandProps = []
+      } = await render(routePath, helmetContext);
+      const styleAssets = clientBundle.output.filter(
+        (chunk) => chunk.type === "asset" && chunk.fileName.endsWith("css")
+      );
+      const islandBundle = await buildIslands(root, islanToPathMap);
+      const islandsCode = islandBundle.output[0].code;
+      const normalizeVendorFilename = (fileName2) => fileName2.replace(/\//g, "_") + ".js";
+      const { helmet } = helmetContext.context;
       const html = `
         <!DOCTYPE html>
           <html lang="en">
     
           <head>
             <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Document</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            ${_optionalChain([helmet, 'optionalAccess', _37 => _37.title, 'optionalAccess', _38 => _38.toString, 'call', _39 => _39()]) || ""}
+            ${_optionalChain([helmet, 'optionalAccess', _40 => _40.meta, 'optionalAccess', _41 => _41.toString, 'call', _42 => _42()]) || ""}
+            ${_optionalChain([helmet, 'optionalAccess', _43 => _43.link, 'optionalAccess', _44 => _44.toString, 'call', _45 => _45()]) || ""}
+            ${_optionalChain([helmet, 'optionalAccess', _46 => _46.style, 'optionalAccess', _47 => _47.toString, 'call', _48 => _48()]) || ""}
+            <meta name="description" content="xxx">
+              ${styleAssets.map(
+        (item) => `
+                <link rel="stylesheet" href="/${item.fileName}">
+              `
+      ).join("\n")}
+            </meta>
+            <script type="importmap">
+                {
+                  "imports": {
+                    ${EXTERNALS.map(
+        (name) => `"${name}": "/${normalizeVendorFilename(name)}"`
+      ).join(",")}
+                  }
+                }
+            </script>
           </head>
     
           <body>
             <div id="root">${appHtml}</div>
-            <script type="module" src="./${_optionalChain([clientChunk, 'optionalAccess', _37 => _37.fileName])}"></script>
+            <script type="module">${islandsCode}</script>
+            <script type="module" src="./${_optionalChain([clientChunk, 'optionalAccess', _49 => _49.fileName])}"></script>
+            <script id="island-props">${JSON.stringify(islandProps)}</script>
           </body>
     
         </html>
@@ -898,7 +970,7 @@ async function build(root = process.cwd(), config) {
   const serverEntryPath = _path.join.call(void 0, root, ".temp", "ssr-entry.js");
   const { render, routes } = await Promise.resolve().then(() => _interopRequireWildcard(require(serverEntryPath)));
   try {
-    await renderPage(render, routes, root, clientBundle);
+    await renderPages(render, routes, root, clientBundle);
   } catch (e) {
     console.log("Render page error.\n", e);
   }
