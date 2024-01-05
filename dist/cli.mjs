@@ -134,7 +134,7 @@ ${relative(config.root, ctx.file)} changed, restarting server...`
     },
     configureServer(server) {
       const publicDir = path2.join(config.root, PUBLIC_DIR);
-      if (fs.pathExistsSync(publicDir)) {
+      if (fs.existsSync(publicDir)) {
         server.middlewares.use(sirv(publicDir));
       }
     }
@@ -931,7 +931,8 @@ async function renderPages(render, routes, root, clientBundle) {
     
           <head>
             <meta charset="UTF-8">
-            <title>Document</title>
+            <title>MuseDoc - \u7B80\u5355\u3001\u5F3A\u5927\u3001\u5FEB\u901F\u7684\u73B0\u4EE3\u5316 SSG \u6846\u67B6</title>
+            <link rel="icon" href="https://doc.musecode.dev/favicon.ico">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             ${helmet?.title?.toString() || ""}
             ${helmet?.meta?.toString() || ""}
@@ -990,7 +991,6 @@ import fs3 from "fs-extra";
 import sirv2 from "sirv";
 var DEFAULT_PORT = 4173;
 async function preview(root, { port }) {
-  const config = await resolveConfig(root, "serve", "production");
   const listenPort = port ?? DEFAULT_PORT;
   const outputDir = path5.resolve(root, "build");
   const notFoundPage = fs3.readFileSync(

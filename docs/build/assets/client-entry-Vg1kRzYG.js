@@ -589,69 +589,63 @@ var loadable$2 = loadable;
 loadable$2.lib = loadable$1;
 var lazy$2 = lazy;
 lazy$2.lib = lazy$1;
-const Route0 = loadable$2(() => __vitePreload(() => import("./a-_7vg85_5.js"), true ? __vite__mapDeps([]) : void 0));
-const Route1 = loadable$2(() => __vitePreload(() => import("./b-bEi5y1QG.js"), true ? __vite__mapDeps([]) : void 0));
-const Route2 = loadable$2(() => __vitePreload(() => import("./c-YOYxbRrM.js"), true ? __vite__mapDeps([]) : void 0));
-const Route3 = loadable$2(() => __vitePreload(() => import("./index-SCiVWKv3.js"), true ? __vite__mapDeps([]) : void 0));
-const Route4 = loadable$2(() => __vitePreload(() => import("./index-ZexpB-TU.js"), true ? __vite__mapDeps([]) : void 0));
+const Route0 = loadable$2(() => __vitePreload(() => import("./configure-site-sldWh0fL.js"), true ? __vite__mapDeps([]) : void 0));
+const Route1 = loadable$2(() => __vitePreload(() => import("./conventional-route-IqPZGIQo.js"), true ? __vite__mapDeps([]) : void 0));
+const Route2 = loadable$2(() => __vitePreload(() => import("./getting-started-H3qT0PLA.js"), true ? __vite__mapDeps([]) : void 0));
+const Route3 = loadable$2(() => __vitePreload(() => import("./home-page-t42wIY57.js"), true ? __vite__mapDeps([]) : void 0));
+const Route4 = loadable$2(() => __vitePreload(() => import("./navbar-JqUqZPqN.js"), true ? __vite__mapDeps([]) : void 0));
+const Route5 = loadable$2(() => __vitePreload(() => import("./spa-vs-mpa-nxH4ph7D.js"), true ? __vite__mapDeps([]) : void 0));
+const Route6 = loadable$2(() => __vitePreload(() => import("./static-assets-yZDGjBCE.js"), true ? __vite__mapDeps([]) : void 0));
+const Route7 = loadable$2(() => __vitePreload(() => import("./use-mdx-RLHciurg.js"), true ? __vite__mapDeps([]) : void 0));
+const Route8 = loadable$2(() => __vitePreload(() => import("./index-z1eTVUGP.js"), true ? __vite__mapDeps([]) : void 0));
 [
   {
-    path: "/guide/a",
+    path: "/guide/configure-site",
     element: React.createElement(Route0),
-    preload: () => __vitePreload(() => import("./a-_7vg85_5.js"), true ? __vite__mapDeps([]) : void 0)
+    preload: () => __vitePreload(() => import("./configure-site-sldWh0fL.js"), true ? __vite__mapDeps([]) : void 0)
   },
   {
-    path: "/guide/b",
+    path: "/guide/conventional-route",
     element: React.createElement(Route1),
-    preload: () => __vitePreload(() => import("./b-bEi5y1QG.js"), true ? __vite__mapDeps([]) : void 0)
+    preload: () => __vitePreload(() => import("./conventional-route-IqPZGIQo.js"), true ? __vite__mapDeps([]) : void 0)
   },
   {
-    path: "/guide/c",
+    path: "/guide/getting-started",
     element: React.createElement(Route2),
-    preload: () => __vitePreload(() => import("./c-YOYxbRrM.js"), true ? __vite__mapDeps([]) : void 0)
+    preload: () => __vitePreload(() => import("./getting-started-H3qT0PLA.js"), true ? __vite__mapDeps([]) : void 0)
   },
   {
-    path: "/guide/",
+    path: "/guide/home-page",
     element: React.createElement(Route3),
-    preload: () => __vitePreload(() => import("./index-SCiVWKv3.js"), true ? __vite__mapDeps([]) : void 0)
+    preload: () => __vitePreload(() => import("./home-page-t42wIY57.js"), true ? __vite__mapDeps([]) : void 0)
+  },
+  {
+    path: "/guide/navbar",
+    element: React.createElement(Route4),
+    preload: () => __vitePreload(() => import("./navbar-JqUqZPqN.js"), true ? __vite__mapDeps([]) : void 0)
+  },
+  {
+    path: "/guide/spa-vs-mpa",
+    element: React.createElement(Route5),
+    preload: () => __vitePreload(() => import("./spa-vs-mpa-nxH4ph7D.js"), true ? __vite__mapDeps([]) : void 0)
+  },
+  {
+    path: "/guide/static-assets",
+    element: React.createElement(Route6),
+    preload: () => __vitePreload(() => import("./static-assets-yZDGjBCE.js"), true ? __vite__mapDeps([]) : void 0)
+  },
+  {
+    path: "/guide/use-mdx",
+    element: React.createElement(Route7),
+    preload: () => __vitePreload(() => import("./use-mdx-RLHciurg.js"), true ? __vite__mapDeps([]) : void 0)
   },
   {
     path: "/",
-    element: React.createElement(Route4),
-    preload: () => __vitePreload(() => import("./index-ZexpB-TU.js"), true ? __vite__mapDeps([]) : void 0)
+    element: React.createElement(Route8),
+    preload: () => __vitePreload(() => import("./index-z1eTVUGP.js"), true ? __vite__mapDeps([]) : void 0)
   }
 ];
 createContext({});
-const APPEARANCE_KEY = "appearance";
-const setClassList = (isDark = false) => {
-  const classList = document.documentElement.classList;
-  if (isDark) {
-    classList.add("dark");
-  } else {
-    classList.remove("dark");
-  }
-};
-const updateAppearance = () => {
-  const userPreferance = localStorage.getItem(APPEARANCE_KEY);
-  setClassList(userPreferance === "dark");
-};
-if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
-  updateAppearance();
-  window.addEventListener("storage", updateAppearance);
-}
-const check = "_check_8dzd7_17";
-const icon = "_icon_8dzd7_34";
-const dark = "_dark_8dzd7_29";
-const sun = "_sun_8dzd7_57";
-const moon = "_moon_8dzd7_61";
-const styles$7 = {
-  "switch": "_switch_8dzd7_1",
-  check,
-  icon,
-  dark,
-  sun,
-  moon
-};
 const link$1 = "_link_1nqg9_1";
 const socialLinkIcon = "_social-link-icon_1nqg9_12";
 const nav = "_nav_1nqg9_22";

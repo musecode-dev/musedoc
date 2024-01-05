@@ -187,7 +187,8 @@ export async function renderPages(
     
           <head>
             <meta charset="UTF-8">
-            <title>Document</title>
+            <title>MuseDoc - 简单、强大、快速的现代化 SSG 框架</title>
+            <link rel="icon" href="https://doc.musecode.dev/favicon.ico">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             ${helmet?.title?.toString() || ''}
             ${helmet?.meta?.toString() || ''}

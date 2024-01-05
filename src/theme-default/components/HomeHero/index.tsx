@@ -11,7 +11,14 @@ export function HomeHero(props: { hero: Hero }) {
           <h1 font="bold" text="6xl" className="max-w-576px">
             <span className={styles.clip}>{hero.name}</span>
           </h1>
-          <p text="6xl" font="bold" className="max-w-576px">
+          <p
+            text="5xl"
+            font="bold"
+            lh="16"
+            mt="3"
+            mb="3"
+            className="max-w-576px"
+          >
             {hero.text}
           </p>
           <p
@@ -37,7 +44,7 @@ export function HomeHero(props: { hero: Hero }) {
         </div>
         {hero.image && (
           <div w="max-96" h="max-96" flex="center" m="auto">
-            <img src={hero.image.src} alt={hero.image.alt} />
+            <img w="90" src={hero.image.src} alt={hero.image.alt} />
           </div>
         )}
       </div>

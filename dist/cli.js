@@ -133,7 +133,7 @@ ${_path.relative.call(void 0, config.root, ctx.file)} changed, restarting server
     },
     configureServer(server) {
       const publicDir = _path2.default.join(config.root, PUBLIC_DIR);
-      if (_fsextra2.default.pathExistsSync(publicDir)) {
+      if (_fsextra2.default.existsSync(publicDir)) {
         server.middlewares.use(_sirv2.default.call(void 0, publicDir));
       }
     }
@@ -930,7 +930,8 @@ async function renderPages(render, routes, root, clientBundle) {
     
           <head>
             <meta charset="UTF-8">
-            <title>Document</title>
+            <title>MuseDoc - \u7B80\u5355\u3001\u5F3A\u5927\u3001\u5FEB\u901F\u7684\u73B0\u4EE3\u5316 SSG \u6846\u67B6</title>
+            <link rel="icon" href="https://doc.musecode.dev/favicon.ico">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             ${_optionalChain([helmet, 'optionalAccess', _37 => _37.title, 'optionalAccess', _38 => _38.toString, 'call', _39 => _39()]) || ""}
             ${_optionalChain([helmet, 'optionalAccess', _40 => _40.meta, 'optionalAccess', _41 => _41.toString, 'call', _42 => _42()]) || ""}
@@ -989,7 +990,6 @@ var _polka = require('polka'); var _polka2 = _interopRequireDefault(_polka);
 
 var DEFAULT_PORT = 4173;
 async function preview(root, { port }) {
-  const config = await _chunkZDC6DKPLjs.resolveConfig.call(void 0, root, "serve", "production");
   const listenPort = _nullishCoalesce(port, () => ( DEFAULT_PORT));
   const outputDir = _path2.default.resolve(root, "build");
   const notFoundPage = _fsextra2.default.readFileSync(

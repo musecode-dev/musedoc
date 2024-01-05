@@ -1,6 +1,6 @@
 import { NavItemWithLink } from 'shared/types';
 import { usePageData } from '@runtime';
-import { SwitchAppearance } from '../SwitchAppearance';
+// import { SwitchAppearance } from '../SwitchAppearance';
 import styles from './index.module.scss';
 
 export function MenuItem({ item }: { item: NavItemWithLink }) {
@@ -25,14 +25,19 @@ export function Nav() {
         justify="between"
         className={`h-14 divider-bottom ${styles.nav}`}
       >
-        <div>
-          <a
-            href="/"
-            hover="opacity-60"
-            className="w-full h-full text-1rem font-semibold flex items-center"
-          >
-            MudeDOC
-          </a>
+        <div flex="~">
+          <img w='10' h='10' m='2'
+            src='../musedoc.png'
+          />
+          <div>
+            <a
+              href="/"
+              hover="opacity-60"
+              className="w-full h-full text-1rem font-semibold flex items-center"
+            >
+              MudeDoc
+            </a>
+          </div>
         </div>
         <div flex="~">
           <div flex="~">
@@ -42,12 +47,12 @@ export function Nav() {
             ))}
           </div>
           {/* 白天/夜间模式切换 */}
-          <div before="menu-item-before" flex="~">
+          {/* <div before="menu-item-before" flex="~">
             <SwitchAppearance />
-          </div>
+          </div> */}
           {/* 相关链接 */}
           <div className={styles.socialLinkIcon} before="menu-item-before">
-            <a href="/">
+            <a href="https://github.com/musecode-dev/musedoc" target="_blank">
               <div className="i-carbon-logo-github w-5 h-5 fill-current"></div>
             </a>
           </div>
